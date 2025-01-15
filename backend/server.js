@@ -103,10 +103,11 @@ app.get('/', (req, res) => {
 });
 
 // making sync with sql database
-await sequelize.sync({alter:true})
+// await sequelize.sync({alter:true})
+await sequelize.sync();
 console.log('All models were synchronized successfully.');
 
 // Start Server
 app.listen(PORT, () => {
-  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });

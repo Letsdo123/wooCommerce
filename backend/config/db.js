@@ -6,6 +6,7 @@ import User from '../models/user.model.js';
 const createFirstAdminUser = asyncHandler(async () => {
     // check the admin exists or not
     // User.collection.dropIndex('phone_1');
+    console.log("It is coming under createFirst User");
     const existingAdmin = await User.findOne({ role: 'admin' });
 
     if (!existingAdmin) {

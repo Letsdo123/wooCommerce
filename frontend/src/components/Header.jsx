@@ -4,14 +4,12 @@ import { GrSearch } from 'react-icons/gr'
 import { CgProfile } from "react-icons/cg";
 import { FaShoppingCart } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { closeModal, openModal } from '../features/modalSlice';
-import { clearError, clearSuccess, logOutUser } from '../features/AuthSlice';
+import { useDispatch, useSelector } from 'react-redux'
 import useToastNotification from '../utils/useToastNofication';
 import ROLE from '../utils/role';
 
 function Header() {
-  const { user, token, error, success } = useSelector((state) => state.auth)
+  // const { user, token, error, success } = useSelector((state) => state.auth)
   const [menuDisplay, setMenuDisplay] = useState(false);
   const [searchText, setSearchText] = useState('')
   const dispatch = useDispatch()
@@ -50,7 +48,9 @@ function Header() {
 
   return (
     <header className='h-16 shadow-md bg-white w-full z-40 border sticky top-0'>
-      
+      <h1 className="text-3xl font-bold underline">
+        Hello world!
+      </h1>
     </header>
   )
 }

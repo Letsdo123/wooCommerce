@@ -1,58 +1,53 @@
-import React, { useContext, useEffect, useState } from 'react'
-import Logo from './Logo';
-import { GrSearch } from 'react-icons/gr'
-import { CgProfile } from "react-icons/cg";
-import { FaShoppingCart } from "react-icons/fa";
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux'
-import useToastNotification from '../utils/useToastNofication';
-import ROLE from '../utils/role';
+import React from "react";
+import { Heart, SearchIcon, ShoppingCart, User } from "lucide-react";
+import Logo from "./Logo.jsx";
 
-function Header() {
-  // const { user, token, error, success } = useSelector((state) => state.auth)
-  const [menuDisplay, setMenuDisplay] = useState(false);
-  const [searchText, setSearchText] = useState('')
-  const dispatch = useDispatch()
-
-  // This handle the notifcation
-  // This maintaing the notification if error or success happen
-  // useToastNotification(error, success, () => dispatch(clearError()), () => dispatch(clearSuccess()))
-
-  // const doLogout = async (e) => {
-  //   e.preventDefault()
-  //   const response = await dispatch(logOutUser(token))
-  //   if (response.type === 'auth/logout-user/fulfilled') {
-  //     console.log("Successfully lougout user");
-  //     dispatch(closeModal());
-  //   }
-  // }
-
-  // set the search text if anything exists into the url
-  // useEffect(() => {
-  //   const searchParams = new URLSearchParams(location.search);
-  //   const query = searchParams.get('query');
-  //   if(query==null) setSearchText('');
-  //   else setSearchText(query)
-  // }, [location.search])
-
-  // handle the search functionality
-  /* const handleSearch = (e) => {
-    const { value } = e.target;
-    if (value.trim())
-      navigate(`/search?query=${value}`)
-    else if (value == "")
-      navigate("/")
-    else
-      navigate(`/search`)
-  } */
-
+const Header = () => {
   return (
-    <header className='h-16 shadow-md bg-white w-full z-40 border sticky top-0'>
-      <h1 className="text-3xl font-bold underline">
-        Hello world!
-      </h1>
-    </header>
-  )
-}
+    <header className="bg-white shadow-md border-b">
+      <div className="container mx-auto flex justify-between items-center">
+        {/* Logo Section */}
+        <div className="flex items-center">
+          <Logo/>
+        </div>
+        {/* Search Section */}
+        <div className="flex items-center w-1/2">
+          <input
+            type="text"
+            placeholder="Search For Items..."
+            className="border border-customGreen rounded-l-md py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-green-400"
+          />
+          <select
+            className="border-t border-b border-customGreen bg-gray-100 text-gray-600 px-4 py-2 focus:outline-none"
+          >
+            <option>All Categories</option>
+            <option>Fruits</option>
+            <option>Vegetables</option>
+            <option>Dairy</option>
+          </select>
+          <button className="bg-red-500 text-white px-4 py-3 rounded-r-md border-t-1 border-b-2 border-red-500 hover:bg-red-600">
+            <SearchIcon className="w-4 h-4"/>
+          </button>
+        </div>
 
-export default Header
+        {/* Icons Section */}
+        <div className="flex items-center space-x-6">
+          <div className="flex items-center space-x-2 cursor-pointer">
+            <User className="h-6 w-6 text-gray-700" />
+            <span className="text-gray-700 font-semibold">Account</span>
+          </div>
+          <div className="flex items-center space-x-2 cursor-pointer">
+            <Heart className="h-6 w-6 text-gray-700"/>
+            <span className="text-gray-700 font-semibold">Wishlist</span>
+          </div>
+          <div className="flex items-center space-x-2 cursor-pointer">
+            <ShoppingCart className="h-6 w-6 text-gray-700"/>
+            <span className="text-gray-700 font-semibold">Cart</span>
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+};
+
+export default Header;

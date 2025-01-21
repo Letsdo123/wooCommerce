@@ -41,7 +41,7 @@ const User = sequelize.define('User', {
         type: DataTypes.DATEONLY,
         defaultValue: null
     },
-    profile_picture: {
+    prfile_picture: {
         type: DataTypes.STRING,
         defaultValue: null,
     },

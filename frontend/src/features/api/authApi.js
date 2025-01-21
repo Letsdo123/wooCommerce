@@ -1,11 +1,12 @@
 // src/features/api/userApi.js
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import summaryApi from '../../utils';
 
 // This is the authApi created by using RTK Query
 export const authApi = createApi({
     reducerPath: 'authApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: '/api/auth',
+        baseUrl: 'http://localhost:5000/api/v1/auth',
         Credential:true
     }),
     endpoints: (builder) => ({
@@ -31,7 +32,14 @@ export const authApi = createApi({
         }),
         fetchUser: builder.query({
             query:()=>'/me'
-        })
+        }),
+        generateUploadUrl: builder.mutation({
+            query:(credentials)=>({
+                url:'/generate-upload-url',
+                method: 'POST',
+                body: credentials
+            })
+        }),
     })
 })
 
@@ -39,5 +47,6 @@ export const {
     useLoginMutation,
     useRegisterMutation,
     useLogoutMutation,
-    useFetchUserQuery
+    useFetchUserQuery,
+    useGenerateUploadUrlMutation
 } = authApi

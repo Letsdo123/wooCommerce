@@ -7,8 +7,9 @@ import cors from 'cors';
 import connectDB from './config/db.js';
 import errorHandler from './middleware/errorHandler.js';
 import authRouter from './routes/authRoutes.js';
+import menuRouter from './routes/menuRoutes.js';
 import client from './config/redisClient.js';
-import sequelize from './config/sqlClient.js';
+import db from './models/index.js';
 
 dotenv.config();
 
@@ -96,6 +97,7 @@ const listKeys = async () => {
 
 // API Routes
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/admin/dashboard', menuRouter);
 
 // Basic test route
 app.get('/', (req, res) => {
@@ -104,7 +106,26 @@ app.get('/', (req, res) => {
 
 // making sync with sql database
 // await sequelize.sync({alter:true})
-await sequelize.sync();
+
+
+// Syncing all sequilize models
+(async () => {
+  try {
+    await db.sequelize.authenticate();
+    console.log('MySQL connection has been established successfully.');
+
+    // create tables if doesn't exists
+    // await sequelize.sync({alter:true});
+    // await Address.sync({force:false})
+    await db.sequelize.sync()
+    console.log("All models synchronized");
+
+  } catch (error) {
+    console.error('Unable to connect to MySQL:', error);
+  }
+})();
+
+// await sequelize.sync();
 console.log('All models were synchronized successfully.');
 
 // Start Server

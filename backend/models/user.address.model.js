@@ -1,6 +1,6 @@
+import sequelize from "../config/sqlClient.js";
 import { DataTypes } from "sequelize";
-import sequelize from "../config/sqlClient";
-import User from "./user.model";
+import User from "./user.model.js";
 
 const Address = sequelize.define('Address',{
     id: {
@@ -20,9 +20,9 @@ const Address = sequelize.define('Address',{
     address_type:{
         type:DataTypes.ENUM('billing','shipping'),
         allowNull:false,
-
+        defaultValue:"shipping"
     },
-    addressline:{
+    address:{
         type:DataTypes.STRING(255),
         allowNull:false,
         defaultValue:""
@@ -40,12 +40,7 @@ const Address = sequelize.define('Address',{
     country:{
         type:DataTypes.STRING(100),
         allowNull:false,
-        defaultValue:""
-    },
-    city:{
-        type:DataTypes.STRING(255),
-        allowNull:false,
-        defaultValue:""
+        defaultValue:"India"
     },
     postal_code:{
         type:DataTypes.STRING(20),
@@ -54,5 +49,4 @@ const Address = sequelize.define('Address',{
     }
 },{modelName:'address',timestamps:false})
 
-User.hasMany(Address,{foreignKey:"user_id",as:User}) // a user can has multiple address
-Address.belongsTo(User,{foreignKey:"user_id",as:Address})
+export default Address

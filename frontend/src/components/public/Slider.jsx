@@ -1,4 +1,6 @@
 import { useState } from "react";
+import slider_image_1 from "../../assets/images/slider_image_1.png";
+import slider_image_3 from "../../assets/images/slider_image_3.png";
 
 const Slider = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -7,13 +9,13 @@ const Slider = () => {
     {
       promotionalBoldTitle: "100%",
       promotionalTitle: "Organic Vegetables",
-      backgroundColor: " bg-slate-400",
+      backgroundColor: "rgb(230 230 230)",
       title: "The best way to stuff your wallet.",
       description:
         "Learn lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem molestias reprehenderit dolores!",
       categories: ["Shopping", "Recipes", "Kitchen", "News", "Food"],
       image: {
-        src: "../../src/assets/images/slider1.png",
+        src: slider_image_1,
         position: {
           top: 10,
           bottom: 20,
@@ -27,13 +29,13 @@ const Slider = () => {
     {
       promotionalBoldTitle: "100%",
       promotionalTitle: "Organic Vegetables",
-      backgroundColor: " bg-red-300",
+      backgroundColor: "rgb(225 196 178)",
       title: "The best way to stuff your wallet.",
       description:
         "Learn lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem molestias reprehenderit dolores!",
       categories: [],
       image: {
-        src: "../../src/assets/images/slider2.png",
+        src: "",
         position: {
           top: 10,
           bottom: 20,
@@ -55,15 +57,15 @@ const Slider = () => {
   };
 
   return (
-    <div className={`${slides[currentSlide]?.backgroundColor} w-full h-full`}>
-      <div className="p-2 max-h-full h-full">
+    <div className={`w-full h-full`} style={{backgroundColor:`${slides[currentSlide]?.backgroundColor}`}}>
+      <div className="p-2 max-h-full h-full relative overflow-hidden">
         <div className="flex h-full justify-between">
           {/* left container */}
           <div className="flex px-[5rem] items-center">
             {/* left container outer div */}
             <div className="flex flex-col justify-between">
               {/* left container inner div */}
-              <div className="flex flex-col justify-around w-[400px] mt-4">
+              <div className="flex flex-col justify-around w-[600px] mt-4">
                 {/* all texts willbe dispalyed here */}
                 <h3 className="text-xl md:text-xl font-bold m-2">
                   <span className="text-red-500 underline">
@@ -108,12 +110,12 @@ const Slider = () => {
             {/* badge container */}
             {
                 slides[currentSlide].categories.length > 0 && (
-                    <div className="lg:w-[400px] flex justify-between mt-6">
+                    <div className="lg:w-[400px] flex gap-3 justify-between mt-40">
               {/* badge will be displayed here */}
               {slides[currentSlide].categories.map((category, index) => (
                 <span
                   key={index}
-                  className="bg-gray-200 text-sm px-3 py-1 rounded-full"
+                  className="bg-white text-sm px-4 py-3 rounded-full text-green-300"
                 >
                   {category}
                 </span>
@@ -136,7 +138,7 @@ const Slider = () => {
           </div>
         </div>
         {/* slider pointer */}
-        <div className="flex items-center w-full px-4 absolute">
+        <div className="flex items-center w-full px-4 absolute bottom-4">
             {slides.length && slides.map((slide,index)=>(
                 <div onClick={handlePrevSlide} key={index} className={`w-5 h-5 rounded-full border ${index == currentSlide ? 'bg-red-700' : 'bg-white-500'}`}>
 

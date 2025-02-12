@@ -33,15 +33,18 @@ const User = sequelize.define('User', {
         allowNull: false
     },
     role: {
-        type: DataTypes.ENUM('customer', 'seller', 'vendor', 'admin'),
-        defaultValue: 'customer',
-        allowNull: false
+        type:DataTypes.INTEGER,
+        references:{
+            model: 'roles',
+            key:'id'
+        },
+        onDelete:'CASCADE'
     },
     date_of_birth: {
         type: DataTypes.DATEONLY,
         defaultValue: null
     },
-    prfile_picture: {
+    profile_picture: {
         type: DataTypes.STRING,
         defaultValue: null,
     },
@@ -54,7 +57,7 @@ const User = sequelize.define('User', {
         type: DataTypes.ENUM('active', 'inactive', 'banned'),
         defaultValue: "inactive",
         allowNull: false
-    }
+    },
 }, { timestamps: true })
 
 export default User

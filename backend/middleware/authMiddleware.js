@@ -4,6 +4,7 @@ import { generateAccessToken } from '../services/tokenServices.js';
 import asyncHandler from 'express-async-handler'
 import dotenv from 'dotenv'
 import { ResponseHandler } from '../services/responseHandler.js';
+import sequelize from '../config/sqlClient.js';
 
 // iniatializing the dotenv
 // without this we can't use dotenv file variables
@@ -14,31 +15,43 @@ const REFRESH_TOKEN_SECRET = process.env.JWT_REFRESH_TOKEN_SECRET;
 
 // Middleware to validate access token
 export const authenticateToken = (req, res, next) => {
+    console.log("Request has come to the authenticate token");
     // The access token will come the autorization header
     // because the access token will store in the locallly in the client machine
     // because it is recommended to store access token locally as a variable
+    const testToken = req.headers;
+    console.log("Test token header",testToken);
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1];
     console.log("Token value:", token);
     if (!token) return ResponseHandler.error(res, null, "Token doesn't found", 400)
     console.log("Accesstoken secret is :", ACCESS_TOKEN_SECRET);
     // if token is avaiable
-    jwt.verify(token, ACCESS_TOKEN_SECRET, (err, user) => {
+    jwt.verify(token, ACCESS_TOKEN_SECRET, async(err, user) => {
         console.log("Error during authenticate:", err);
         if (err) return ResponseHandler.error(res, null, "Invalid token", 400) // Invalid token
-
-        req.user = user; // Attach user info to the request
+        console.log("Data retrived from the jwt:",user);
+        const userDetails = await sequelize.query(
+            `SELECT * FROM users WHERE id = ${user.userId}`,
+            { type: sequelize.QueryTypes.SELECT }
+        )
+        console.log("User details in the middleware",userDetails);
+        req.user = userDetails; // Attach user info to the request
         next(); // pass to next middleware
     })
 }
 
 // This is the middleware that checks the access controller
-export const restrictTo = (roles) => (req, res, next) => {
+export const restrictTo = asyncHandler((...roles) => (req, res, next) => {
+    // Ensure user is authenticated
+    if (!req.user) {
+        return ResponseHandler.error(res,null,"User is not found",400);
+    }
     if (!roles.includes(req.user.role)) {
-        return ResponseHandler.error(res, null, "Access denied", 400)
+        return ResponseHandler.error(res, null, "Access denied", 400);
     }
     next(); // Continue to the next middleware or route handler
-};
+});
 
 
 //  Middleware to handle refresh tokens if the access token experies

@@ -10,10 +10,13 @@ const approvalSchema = new mongoose.Schema({
         type:mongoose.Schema.Types.Mixed,
         required:true
     },
+    details:{
+        type:Object,
+        required:true
+    },
     adminId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'User',
-        required:true,
         default:null
     },
     status: {

@@ -2,10 +2,10 @@
 import React from 'react';
 import { FaFacebookF, FaTwitter, FaDribbble, FaInstagram, FaLocationArrow, FaMobile } from 'react-icons/fa';
 import Logo from './Logo';
-import footer_image_1 from "../assets/images/footer_image_1.jpg";
-import footer_image_2 from "../assets/images/footer_image_2.jpg";
-import footer_image_3 from "../assets/images/footer_image_3.jpg";
-import footer_image_4 from "../assets/images/footer_image_4.jpg";
+import footer_image_1 from "../../assets/images/footer_image_1.jpg";
+import footer_image_2 from "../../assets/images/footer_image_2.jpg";
+import footer_image_3 from "../../assets/images/footer_image_3.jpg";
+import footer_image_4 from "../../assets/images/footer_image_4.jpg";
 import { Mail, MessageCircle } from 'lucide-react';
 
 const Footer = () => {

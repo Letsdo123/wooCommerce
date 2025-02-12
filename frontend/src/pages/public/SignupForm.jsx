@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
-import asyncHandler from "../utils/asyncHandler";
+import { useForm } from "react-hook-form";
+import asyncHandler from "../../utils/asyncHandler";
 import axios from "axios";
-import uploadImageUrl from "../utils/imageUpload";
-import { useGenerateUploadUrlMutation } from "../features/api/authApi";
+import uploadImageUrl from "../../utils/imageUpload";
+import { useGenerateUploadUrlMutation, useGetRoleQuery, useRegistrationMutation } from "../../features/auth/authApi";
 
 const SignupForm = () => {
   const [step, setStep] = useState(1);
@@ -21,9 +21,17 @@ const SignupForm = () => {
 
   // destcturing from the rtk query for file upload
   const [generateUploadUrl] = useGenerateUploadUrlMutation()
+  const [registration] = useRegistrationMutation()
+  const {data:roles,isLoading:rolesLoading} = useGetRoleQuery()
 
-  const onSubmit = (data) => {
-    console.log("Form Data: ", data);
+  const onSubmit = async(formData) => {
+    // console.log("Form Data: ", data);
+    const userData = {...formData,name: formData.firstName + " " + formData.lastName,postal_code:formData.postalCode}
+    console.log(userData);
+    const {data} = await registration({
+      userData
+    })
+    console.log("The registration data is: ", data);
   };
 
 
@@ -51,7 +59,7 @@ const SignupForm = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md md:max-w-4xl">
+      <div className="bg-white p-8 rounded-lg shadow-lg max-w-md md:max-w-4xl">
         {step === 1 && (
           <form onSubmit={handleSubmit(nextStep)}>
             <div className="flex items-center justify-center mb-6">
@@ -194,9 +202,9 @@ const SignupForm = () => {
                   {...register("role", { required: "Role is required" })}
                 >
                   <option value="">Select Role</option>
-                  <option value="customer">Customer</option>
-                  <option value="seller">Seller</option>
-                  <option value="admin">Admin</option>
+                  {rolesLoading ? <option>Loading...</option>: roles?.data?.map(role=>(
+                    <option key={role.id} value={role.id}>{role.name}</option>
+                  ))}
                 </select>
                 {errors.role && (
                   <p className="text-red-500 text-sm mt-1">
@@ -262,8 +270,7 @@ const SignupForm = () => {
         {step === 2 && (
           <form onSubmit={handleSubmit(onSubmit)}>
             <h2 className="text-lg font-semibold text-gray-700 mb-4">
-              Address Details
-            </h2>
+              </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="md:col-span-2">
@@ -311,6 +318,22 @@ const SignupForm = () => {
                 {errors.state && (
                   <p className="text-red-500 text-sm mt-1">
                     {errors.state.message}
+                  </p>
+                )}
+              </div>
+              <div>
+                <label className="block text-gray-700 font-semibold mb-1">
+                  Country*
+                </label>
+                <input
+                  type="text"
+                  placeholder="Country"
+                  className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                  {...register("country", { required: "Country is required" })}
+                />
+                {errors.country && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.country.message}
                   </p>
                 )}
               </div>

@@ -12,7 +12,8 @@ import sequelize from '../config/sqlClient.js'
 import Approval from '../models/approval.model.js'
 import { createUser } from '../services/userCreationService.js'
 
-// register a new user
+// register a new user 
+// ayan feature
 export const registerUser = asyncHandler(async (req, res) => {
     const { name, email, mobile, gender, role, password, address, city, state, country, postal_code } = req.body.userData
     console.log("Registration request has come to the controller", req.body);
@@ -60,8 +61,8 @@ export const verifyUser = asyncHandler(async (req, res) => {
     // console.log("Data has come from the frontend to backend", identifier, code)
     console.log("It is coming under verify user");
     // checking without frontend
-    const identifier = 'kamal.ghosh@woocommerce.com'
-    const code = '532242'
+    const identifier = 'ayanbera25@gmail.com'
+    const code = '531564'
 
     // getting the temporary user from the reddis db
     const tempUser = await redisClient.get(`temp_user:${identifier}`)

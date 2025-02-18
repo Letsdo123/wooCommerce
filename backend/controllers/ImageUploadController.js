@@ -23,7 +23,7 @@ export const generateImageUrl = asyncHandler(async (req, res) => {
 })
 
 export const generateSignedUrl = (req, res) => {
-    const { folder, timestamp } = req.body;
+    const { folder, timestamp,context } = req.body;
     console.log("Folder and timestamp:",folder,timestamp);
     // Set default folder path if not provided
     const folderPath = folder ? `woocommerce/${folder}` : "woocommerce";
@@ -33,6 +33,7 @@ export const generateSignedUrl = (req, res) => {
         {
             folder: folderPath,
             timestamp,
+            context: `document_type=${context}`
         },
         process.env.CLOUDINARY_API_SECRET
     );
@@ -44,3 +45,15 @@ export const generateSignedUrl = (req, res) => {
     },"Successfully created the signed image url",201)
 
 };
+
+export const getDocumentUrl = asyncHandler((req,res)=>{
+    const {publicId,format} = req.params;
+    if(!publicId) return ResponseHandler.error(res,null,"Public Id is required!",400)
+    if(!format) return ResponseHandler.error(res,null,"Format is required!",400)
+
+    const documentUrl = cloudinary.url(publicId,{
+        secure:true,
+        format
+    })
+    return ResponseHandler.success(res,{url:documentUrl},"Successfully generated the url",200)
+})

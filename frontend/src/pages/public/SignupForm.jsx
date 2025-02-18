@@ -22,7 +22,6 @@ const SignupForm = () => {
   // destcturing from the rtk query for file upload
   const [generateUploadUrl] = useGenerateUploadUrlMutation()
   const [registration] = useRegistrationMutation()
-  const {data:roles,isLoading:rolesLoading} = useGetRoleQuery()
 
   const onSubmit = async(formData) => {
     // console.log("Form Data: ", data);
@@ -52,7 +51,7 @@ const SignupForm = () => {
         folder: 'user_profiles',
         timestamp,
       });
-      const imageUrl = await uploadImageUrl(file, data)
+      const imageUrl = await uploadImageUrl(file,data)
       setProfilePictureUrl(imageUrl.secure_url)
     }
   }
@@ -190,25 +189,6 @@ const SignupForm = () => {
                 {errors.gender && (
                   <p className="text-red-500 text-sm mt-1">
                     {errors.gender.message}
-                  </p>
-                )}
-              </div>
-              <div>
-                <label className="block text-gray-700 font-semibold mb-1">
-                  Role*
-                </label>
-                <select
-                  className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
-                  {...register("role", { required: "Role is required" })}
-                >
-                  <option value="">Select Role</option>
-                  {rolesLoading ? <option>Loading...</option>: roles?.data?.map(role=>(
-                    <option key={role.id} value={role.id}>{role.name}</option>
-                  ))}
-                </select>
-                {errors.role && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.role.message}
                   </p>
                 )}
               </div>

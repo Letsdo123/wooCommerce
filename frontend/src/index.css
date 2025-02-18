@@ -79,3 +79,25 @@ body {
 .form-section-title {
   @apply text-xl font-semibold text-gray-800 flex items-center space-x-2 pb-2 border-b border-gray-200;
 }
+
+.ag-theme-alpine {
+  --ag-foreground-color: rgb(31, 41, 55);
+  --ag-background-color: #fff;
+  --ag-header-foreground-color: rgb(31, 41, 55);
+  --ag-header-background-color: rgb(243, 244, 246);
+  --ag-odd-row-background-color: rgb(249, 250, 251);
+  --ag-header-column-resize-handle-color: rgb(203, 213, 225);
+  --ag-border-color: rgb(229, 231, 235);
+}
+
+.ag-theme-alpine .ag-header {
+  font-weight: 600;
+}
+
+.ag-theme-alpine .ag-row {
+  border-bottom-color: rgb(229, 231, 235);
+}
+
+.ag-theme-alpine .ag-row-hover {
+  background-color: rgb(243, 244, 246);
+}

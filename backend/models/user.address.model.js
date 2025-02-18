@@ -18,7 +18,7 @@ const Address = sequelize.define('Address',{
         onDelete:'CASCADE'
     },
     address_type:{
-        type:DataTypes.ENUM('billing','shipping'),
+        type:DataTypes.ENUM('billing','shipping','business'),
         allowNull:false,
         defaultValue:"shipping"
     },

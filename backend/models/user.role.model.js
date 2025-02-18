@@ -6,6 +6,6 @@ const UserRole = sequelize.define('UserRole',{
     userId:{type:DataTypes.INTEGER,references:{model:'Users',key:'id'},onDelete:'CASCADE'},
     roleId:{type:DataTypes.INTEGER,references:{model:'Roles',key:'id'},onDelete:'CASCADE'},
     status:{type:DataTypes.ENUM('pending','approved','rejected'),defaultValue:'pending'}
-},{timestamps:true})
+},{tableName:'user_roles',timestamps:true})
 
 export default UserRole

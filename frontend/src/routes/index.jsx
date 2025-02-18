@@ -12,6 +12,9 @@ import RolePermissions from "../pages/dashboard/RolePermission";
 import LoginPage from "../pages/public/LoginPage";
 import Role from "../pages/dashboard/Role";
 import UserApproval from "../pages/dashboard/UserApproval";
+import SellerRegistrationForm from "../pages/public/SellerRegistrationForm";
+import DeliveryPartnerForm from "../pages/public/DeliveryPartnerForm";
+import UserApprovalGrid from "../components/public/UserApprovalGrid";
 
 const router = createBrowserRouter([{
     path: "/",
@@ -22,7 +25,9 @@ const router = createBrowserRouter([{
             element: <MainLayout/>,
             children:[
                 {path:"/",element:<Home/>},
-                {path:"register",element:<SignupForm/>},
+                {path:"registration/user",element:<SignupForm/>},
+                {path:"registration/seller",element:<SellerRegistrationForm/>},
+                {path:"registration/logistic",element:<DeliveryPartnerForm/>},
                 {path:"login",element:<LoginPage/>}
             ]
         },
@@ -39,7 +44,7 @@ const router = createBrowserRouter([{
                 {index:true,element:<ECommerce/>},
                 {path:"products",element:<Products/>},
                 {path:"role-management",element:<Role/>},
-                {path:"user-approval",element:<UserApproval/>}
+                {path:"user-approval",element:<UserApprovalGrid/>}
             ]
         },
         {

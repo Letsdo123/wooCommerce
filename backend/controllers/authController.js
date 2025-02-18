@@ -14,7 +14,7 @@ import { createUser } from '../services/userCreationService.js'
 
 // register a new user
 export const registerUser = asyncHandler(async (req, res) => {
-    const { name, email, mobile, gender, role, password, address, city, state, country, postal_code } = req.body.userData
+    const { name, email, mobile, gender, password, address, city, state, country, postal_code } = req.body.userData
     console.log("Registration request has come to the controller", req.body);
 
     // debugging
@@ -43,7 +43,7 @@ export const registerUser = asyncHandler(async (req, res) => {
     const otp = generateOtp()
 
     // before verifying we will store the user details temporarily
-    const temoparyUserDetails = { name, email, mobile, gender, role, password, address, city, state, country, postal_code, otp }
+    const temoparyUserDetails = { name, email, mobile, gender, password, address, city, state, country, postal_code, otp }
     const reddisResponse = await redisClient.setEx(`temp_user:${email}`, 300, JSON.stringify(temoparyUserDetails))
 
     console.log("It is stored inside the reddis temporary user data", reddisResponse);
@@ -60,8 +60,8 @@ export const verifyUser = asyncHandler(async (req, res) => {
     // console.log("Data has come from the frontend to backend", identifier, code)
     console.log("It is coming under verify user");
     // checking without frontend
-    const identifier = 'kamal.ghosh@woocommerce.com'
-    const code = '532242'
+    const identifier = 'ayan@gmail.com'
+    const code = '917127'
 
     // getting the temporary user from the reddis db
     const tempUser = await redisClient.get(`temp_user:${identifier}`)
@@ -69,30 +69,34 @@ export const verifyUser = asyncHandler(async (req, res) => {
     if (!tempUser) return ResponseHandler.error(res, null, 'experied otp', 400)
 
     // Parsing the data from reddis db
-    const { name, email, mobile, gender, role, password, address, city, state, country, postal_code, otp } = JSON.parse(tempUser)
+    const { name, email, mobile, gender, password, address, city, state, country, postal_code, otp } = JSON.parse(tempUser)
 
     // Verify OTP with Twilio
     // const verificationStatus = await verifyOtp(identifier, code)
     // console.log("verification status:", verificationStatus);
     if (code == otp) {
-        if (role == 2 || role == 4) {
 
-            // Now one approval entry will be created
-            // if the user is seller or vendor or any other specific admin
-            const newApproval = Approval.create({
-                entityType: 'User',
-                entityId: newUserId,
-                details:{ name, email, mobile, gender, role, password, address, city, state, country, postal_code }
-            })
-
-            // delete the user from the reddis db
-            await redisClient.del(`temp_user:${identifier}`);
-
-            // Now the response will be retuened
-            return ResponseHandler.success(res, { newApproval }, 'User approval is pending now!!', 201)
-        }
-
-        const newUserId = await createUser({ name, email, mobile, gender, role, password, address, city, state, country, postal_code })
+        // if OTP is correct then we will create a new user
+        const newUserId = await createUser({ name, email, mobile, gender, password, address, city, state, country, postal_code })
+        console.log("New user id",newUserId);
+        
+        // userroll will be created as customer by default
+        const [customerRole] = await sequelize.query(
+            `SELECT id FROM roles WHERE name = 'customer'`,
+            {
+                type:sequelize.QueryTypes.SELECT
+            }
+        )
+        console.log("Customer role details",customerRole);
+        const customerRoleId = customerRole.id;
+        const userRole = await sequelize.query(
+            `INSERT INTO user_roles (userId,roleId,status,createdAt,updatedAt) values (:newUserId,:customerRoleId,"approved",now(),now())`,
+            {
+                replacements: { newUserId, customerRoleId },
+                type: sequelize.QueryTypes.INSERT
+            }
+        )
+        console.log("User role creation status", userRole);
         // creating both token access token & refresh token
         const accessToken = generateAccessToken(newUserId)
         const refreshToken = generateRefreshToken(newUserId)
@@ -114,8 +118,10 @@ export const verifyUser = asyncHandler(async (req, res) => {
         })
         // sending the final response throught the response handler class 'ResponseHandler'
         // with res,data,message,statusCode
-        return ResponseHandler.success(res, { newUserId, newAddress, newApproval, accessToken }, 'User registred successfully!', 201)
+        return ResponseHandler.success(res, { newUserId, accessToken }, 'User registred successfully!', 201)
     }
+    else
+        return ResponseHandler.error(res, null, "Wrong otp", 400)
 })
 
 // This is the function to login a user

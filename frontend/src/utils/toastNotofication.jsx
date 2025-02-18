@@ -1,19 +1,15 @@
-// ToastNotification.js
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
 
-const ToastNotification = () => {
-    return <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
-}
+const useToast = () => {
+    const showSuccess = (message) => {
+        toast.success(message);
+    };
 
-export const showError = (message) => {
-    toast.error(message);
-    return
-}
+    const showError = (message) => {
+        toast.error(message);
+    };
 
-export const showSuccess = (message) => {
-    toast.success(message);
-    return
-}
+    return { showSuccess, showError };
+};
 
-export default ToastNotification;
+export default useToast;

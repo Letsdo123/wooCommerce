@@ -1,12 +1,21 @@
 import asyncHandler from "./asyncHandler";
 import axios from "axios";
 
+const getResourceType = (file) => {
+    if (file.type.startsWith("image/")) return "image";
+    if (file.type.startsWith("video/")) return "video";
+    return "raw"; // Default for PDFs and other files
+};
+
+
 // handling the uploading image from the backend and upload it to the frontend
-const uploadImageUrl = asyncHandler(async (file,signedUrlData) => {
+const uploadImageUrl = asyncHandler(async (file, context, signedUrlData) => {
     if (!signedUrlData) {
         await refetch();
     }
-    const { signature,folder, timestamp, cloudName, apiKey } = signedUrlData.data;
+
+    const { signature, folder, timestamp, cloudName, apiKey } = signedUrlData.data;
+    const resourceType = getResourceType(file); // Dynamically determine resource type
 
     // Prepare the form data
     const formData = new FormData();
@@ -15,15 +24,21 @@ const uploadImageUrl = asyncHandler(async (file,signedUrlData) => {
     formData.append("timestamp", timestamp);
     formData.append("signature", signature);
     formData.append('folder', folder);
-    //formData.append("folder","woocommerce");
+    if (context) {
+        formData.append("context", `document_type=${context}`);
+    }
+    try {
+        const uploadResponse = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`, {
+            method: "POST",
+            body: formData,
+        });
 
-    // Upload to Cloudinary
-    const uploadResponse = await axios.post(
-        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-        formData
-    );
-    console.log("Uploaded response:",uploadResponse);
-    return uploadResponse.data;
+        const data = await uploadResponse.json();
+        console.log("Uploaded file:", data);
+        return data;
+    } catch (error) {
+        console.error("Upload failed:", error);
+    }
 }
 )
 

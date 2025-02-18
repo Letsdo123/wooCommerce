@@ -31,7 +31,7 @@ export const authenticateToken = (req, res, next) => {
         console.log("Error during authenticate:", err);
         if (err) return ResponseHandler.error(res, null, "Invalid token", 400) // Invalid token
         console.log("Data retrived from the jwt:",user);
-        const userDetails = await sequelize.query(
+        const [userDetails] = await sequelize.query(
             `SELECT * FROM users WHERE id = ${user.userId}`,
             { type: sequelize.QueryTypes.SELECT }
         )

@@ -32,14 +32,6 @@ const User = sequelize.define('User', {
         unique: true,
         allowNull: false
     },
-    role: {
-        type:DataTypes.INTEGER,
-        references:{
-            model: 'roles',
-            key:'id'
-        },
-        onDelete:'CASCADE'
-    },
     date_of_birth: {
         type: DataTypes.DATEONLY,
         defaultValue: null

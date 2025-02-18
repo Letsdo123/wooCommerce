@@ -1,15 +1,15 @@
 import asyncHandler from "../../frontend/src/utils/asyncHandler.js";
 import sequelize from "../config/sqlClient.js";
 
-export const createUser = asyncHandler(async({name, email, mobile, gender, role, password, address, city, state, country, postal_code})=>{
+export const createUser = asyncHandler(async ({ name, email, mobile, gender, password, address, city, state, country, postal_code }) => {
     const [newUserId] = await sequelize.query(
         `
     INSERT INTO users 
-    (name, email, mobile, gender, role, password, createdAt, updatedAt) 
-    VALUES (:name, :email, :mobile, :gender, :role, :password, NOW(), NOW());
+    (name, email, mobile, gender, password, createdAt, updatedAt) 
+    VALUES (:name, :email, :mobile, :gender, :password, NOW(), NOW());
     `,
         {
-            replacements: { name, email, mobile, gender, role, password },
+            replacements: { name, email, mobile, gender, password },
             type: sequelize.QueryTypes.INSERT,
         }
     );
@@ -22,7 +22,7 @@ export const createUser = asyncHandler(async({name, email, mobile, gender, role,
     )
 
     // This is for debugging purpose
-    console.log("User details:",newUserId);
+    console.log("User details:", newUserId);
     console.log("Address details:", address);
 
     // finally returning the details

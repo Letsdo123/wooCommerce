@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom'
 import Slider from '../../components/public/Slider'
 import { useSelector } from 'react-redux'
 import Agents from './Agents'
+import GrowWithUsPage from './GrowWithUsPage'
 
 function Home() {
   const {user} = useSelector((state)=>state.auth)
@@ -11,9 +12,9 @@ function Home() {
     console.log("User details in home:",user);
   },[user])
   return (
-    <main className='h-[calc(100vh-7rem)] bg-gray-100 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-200'>
+    <main className=' bg-gray-100 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-200'>
         <Slider/>
-        <Agents/>
+        <GrowWithUsPage/>
         <Outlet/>
     </main>
   )

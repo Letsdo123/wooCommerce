@@ -61,13 +61,8 @@ export const verifyUser = asyncHandler(async (req, res) => {
     // console.log("Data has come from the frontend to backend", identifier, code)
     console.log("It is coming under verify user");
     // checking without frontend
-<<<<<<< HEAD
     const identifier = 'ayanbera25@gmail.com'
     const code = '531564'
-=======
-    const identifier = 'ayan@gmail.com'
-    const code = '917127'
->>>>>>> origin/souvick-feature
 
     // getting the temporary user from the reddis db
     const tempUser = await redisClient.get(`temp_user:${identifier}`)

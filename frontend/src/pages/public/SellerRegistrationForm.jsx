@@ -8,7 +8,7 @@ import DocumentUploadSection from "../../components/sections/DocumentUploadSecti
 import { useGenerateUploadUrlMutation } from "../../features/auth/authApi";
 import uploadImageUrl from "../../utils/imageUpload";
 import Loader from "./Loader";
-import { useGetApprovalMutation } from "../../features/approval/approvalApi";
+import { useCreateApprovalMutation } from "../../features/approval/approvalApi";
 import useToast from "../../utils/toastNotofication";
 
 function SellerRegistrationForm() {
@@ -22,7 +22,7 @@ function SellerRegistrationForm() {
 
     const [generateUploadUrl] = useGenerateUploadUrlMutation()
     const [isSubmitting, setIsSubmitting] = useState(false)
-    const [getApproval] = useGetApprovalMutation()
+    const [createApproval] = useCreateApprovalMutation()
     const { showSuccess, showError } = useToast()
 
     const onSubmit = async (data) => {
@@ -61,7 +61,7 @@ function SellerRegistrationForm() {
             }
         })
         console.log("Updated documents", updatedDocuments);
-        const {data:approvalStatus,error} = await getApproval({
+        const { data: approvalStatus, error } = await createApproval({
             entityType: 'User',
             details: data,
             documents: updatedDocuments
@@ -70,7 +70,7 @@ function SellerRegistrationForm() {
         // console.log("Error:",error);
 
         // show message according to the data
-        if(approvalStatus!=undefined){
+        if (approvalStatus != undefined) {
             showSuccess("Seller approval is pending");
         }
         else showError(error.data.message)

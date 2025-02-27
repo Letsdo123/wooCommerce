@@ -8,18 +8,8 @@ const Document = sequelize.define("Document", {
         autoIncrement: true,
         primaryKey: true,
     },
-    user_id:{
-        type:DataTypes.INTEGER,
-        allowNull :false,
-        references :{
-            model:User,
-            key:'id'
-        },
-        onDelete :'CASCADE',
-        onUpdate :'CASCADE'
-    },
     entity_type: {
-        type: DataTypes.ENUM("USER", "SELLER", "LOGISTICS"), // Add more entity types if needed
+        type: DataTypes.ENUM("CUSTOMER", "SELLER", "LOGISTICS"), // Add more entity types if needed
         allowNull: false,
     },
     entity_id: {

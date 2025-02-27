@@ -1,6 +1,6 @@
 import {DataTypes} from "sequelize"
-import User from "./user.model"
-import sequelize from "../config/sqlClient"
+import User from "./user.model.js"
+import sequelize from "../config/sqlClient.js"
 
 // Here we are definging the model
 // of the customer model
@@ -35,7 +35,7 @@ const Customer = sequelize.define('Customer',{
         defaultValue: null,
         allowNull: true
     }
-},{tableName:'customer',timestamps:false})
+},{tableName:'customers',timestamps:false})
 
 // Establishing the relationship between the customer and user
 User.hasOne(Customer,{foreignKey:'user_id',as: 'customer'}); // A User has one customer

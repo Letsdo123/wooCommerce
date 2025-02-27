@@ -40,12 +40,16 @@ const approvalSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['Pending', 'Approved', 'Rejected'],
+        enum: ['Pending', 'Approved','Reapply','Rejected'],
         default: 'Pending',
     },
     comments: {
         type: String, // Admin comments on approval/rejection
         default: '',
+    },
+    reapplyCount :{
+        type : Number, // This count how many times we are giving reapply chnaces to the user
+        default : 0
     },
     reapplyAfter: {
         type: Date, // Date after which user can reapply

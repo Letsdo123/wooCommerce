@@ -24,6 +24,7 @@ const uploadImageUrl = asyncHandler(async (file, context, signedUrlData) => {
     formData.append("timestamp", timestamp);
     formData.append("signature", signature);
     formData.append('folder', folder);
+    formData.append("type", "upload");
     if (context) {
         formData.append("context", `document_type=${context}`);
     }

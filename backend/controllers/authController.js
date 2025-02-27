@@ -61,7 +61,7 @@ export const verifyUser = asyncHandler(async (req, res) => {
     console.log("It is coming under verify user");
     // checking without frontend
     const identifier = 'ayan@gmail.com'
-    const code = '917127'
+    const code = '260255'
 
     // getting the temporary user from the reddis db
     const tempUser = await redisClient.get(`temp_user:${identifier}`)
@@ -82,7 +82,7 @@ export const verifyUser = asyncHandler(async (req, res) => {
         
         // userroll will be created as customer by default
         const [customerRole] = await sequelize.query(
-            `SELECT id FROM roles WHERE name = 'customer'`,
+            `SELECT id FROM roles WHERE name = 'CUSTOMER'`,
             {
                 type:sequelize.QueryTypes.SELECT
             }
@@ -268,9 +268,10 @@ export const getUserApprovalDetails = asyncHandler(async (req, res) => {
 // This is the controllers that handles the role management
 export const createRole = asyncHandler(async (req, res) => {
     const { name, description } = req.body
+    console.log("Name and description of the roles:",name,description);
     console.log("Request has come to the create Role controller");
     console.log("User details fetched from the middleware", req.user);
-    const createdBy = req.user[0].name
+    const createdBy = req.user.name
     console.log("Created by", createdBy, name, description);
     const [newRole] = await sequelize.query(
         `INSERT INTO roles (name,description,createdBy,createdAt,updatedAt) values(:name,:description,:createdBy,now(),now())`,

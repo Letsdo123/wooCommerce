@@ -1,7 +1,7 @@
 import express from'express'
 import { createRole, getAllRoles, getUserApprovalDetails, loginUser, logoutUser, registerUser, requestPasswordReset, resetPassword, verifyUser } from '../controllers/authController.js'
 import { authenticateToken, restrictTo } from '../middleware/authMiddleware.js'
-import { generateSignedUrl } from '../controllers/ImageUploadController.js'
+import { generateSignedUrl, getSignedPdfUrl } from '../controllers/ImageUploadController.js'
 
 // initialization of the router
 const router = express.Router()
@@ -16,6 +16,7 @@ router.route("/request-reset-password").post(requestPasswordReset)
 router.route("/reset-password").post(resetPassword)
 // router.get('/generate-upload-url',generateImageUrl)
 router.post('/generate-upload-url',generateSignedUrl)
+router.post('/retrive-upload-url',getSignedPdfUrl)
 
 // handling the roles routes
 router.route("/add-role").post(authenticateToken,createRole)

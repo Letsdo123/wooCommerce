@@ -8,17 +8,17 @@ const Address = sequelize.define('Address',{
         primaryKey: true,
         autoIncrement: true
     },
-    user_id:{
+    entity_type: {
+        type: DataTypes.ENUM("CUSTOMER", "SELLER", "LOGISTICS"), // Add more entity types if needed
+        allowNull: false,
+    },
+    entity_id: {
         type: DataTypes.INTEGER,
-        allowNull:false,
-        references:{
-            model:User,
-            key:'id'
-        },
-        onDelete:'CASCADE'
+        allowNull: false,
+        comment: "ID of the user, seller, or logistic entity",
     },
     address_type:{
-        type:DataTypes.ENUM('billing','shipping','business'),
+        type:DataTypes.ENUM('billing','shipping','business','logistics'),
         allowNull:false,
         defaultValue:"shipping"
     },
@@ -47,6 +47,6 @@ const Address = sequelize.define('Address',{
         allowNull:false,
         defaultValue:""
     }
-},{modelName:'address',timestamps:false})
+},{tableName:'addresses',timestamps:false})
 
 export default Address

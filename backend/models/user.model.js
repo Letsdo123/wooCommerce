@@ -50,6 +50,6 @@ const User = sequelize.define('User', {
         defaultValue: "inactive",
         allowNull: false
     },
-}, { timestamps: true })
+}, {tableName:'users',timestamps: true })
 
 export default User

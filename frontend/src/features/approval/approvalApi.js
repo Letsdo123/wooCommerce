@@ -19,9 +19,23 @@ export const approvalApi = createApi({
         }
     }),
     endpoints: (builder) => ({
-        getApproval: builder.mutation({
+        createApproval: builder.mutation({
             query: (credentials) => ({
                 url: '/user',
+                method: 'POST',
+                body: credentials
+            })
+        }),
+        getApprovalDetails: builder.mutation({
+            query: (credentials) => ({
+                url: '/all-approval-details',
+                method: 'POST',
+                body: credentials
+            })
+        }),
+        processApproval: builder.mutation({
+            query: (credentials) => ({
+                url: '/process-approval',
                 method: 'POST',
                 body: credentials
             })
@@ -30,5 +44,7 @@ export const approvalApi = createApi({
 })
 
 export const {
-    useGetApprovalMutation
+    useCreateApprovalMutation,
+    useGetApprovalDetailsMutation,
+    useProcessApprovalMutation
 } = approvalApi

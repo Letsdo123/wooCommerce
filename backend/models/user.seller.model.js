@@ -5,12 +5,16 @@ import User from "./user.model.js";
 // Here we are defining the model of the seller
 // using sequilizing
 const Seller = sequelize.define('Seller',{
-    user_id:{
+    id:{
         type:DataTypes.INTEGER,
         primaryKey:true,
+        autoIncrement:true
+    },
+    user_id:{
+        type:DataTypes.INTEGER,
         allowNull:false,
         references:{
-            user:User,
+            model:User,
             key:'id'
         },
         onDelete:'CASCADE',
@@ -60,6 +64,6 @@ const Seller = sequelize.define('Seller',{
         type:DataTypes.INTEGER,
         defaultValue:0
     }
-},{tableName:"seller",timestamps:false})
+},{tableName:"sellers",timestamps:false})
 
 export default Seller;

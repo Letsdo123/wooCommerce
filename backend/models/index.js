@@ -7,37 +7,70 @@ import Role from "./role.model.js";
 import Bank from "./bank.model.js";
 import Seller from "./user.seller.model.js";
 import Document from "./document.model.js";
+import Customer from "./user.customer.model.js";
+import EntityRelation from "./entity_relation.model.js";
 
 // Function to set up associations (called after models are defined)
 const setupAssociations = () => {
 
-    User.hasOne(Seller, { foreignKey: 'user_id', as: 'seller' }); // A User has one seller
+    User.hasOne(Seller, { foreignKey: 'user_id', as: 'sellers' });
     Seller.belongsTo(User, { foreignKey: 'user_id', as: 'users' });
 
-    // One to many (User has many Addresses)
-    User.hasMany(Address, { foreignKey: 'user_id', as: 'addresses' });
-    Address.belongsTo(User, { foreignKey: 'user_id', as: 'users' });
+    User.hasOne(Customer,{foreignKey:'user_id',as:'userCustomer'});
+    Customer.belongsTo(User,{foreignKey:'user_id',as:'customerUser'});
 
-    // user has many bank accounts
-    User.hasMany(Bank, { foreignKey: 'user_id', as: 'bank' })
-    Bank.belongsTo(User, { foreignKey: 'user_id', as: 'users' })
-
-    // User has many documents (who uploaded them)
-    User.hasMany(Document,{foreignKey:'user_id',as:'documents'})
-    Document.belongsTo(User,{foreignKey:'user_id',as:'users'})
-
-    Seller.hasMany(Document,{
-        foreignKey:'entity_id',
+    // Now I am creating the relationship with entityRelationModel
+    EntityRelation.belongsTo(Customer,{
+        foreignKey: 'entity_id',
         constraints:false,
-        scope:{entity_type:"SELLER"},
-        as:"documents"
+        as: 'customerRelations'
     })
 
-    Document.belongsTo(Seller, { 
-        foreignKey: "entity_id", 
+    EntityRelation.belongsTo(Seller,{
+        foreignKey: 'entity_id',
+        constraints:false,
+        as: 'sellerRelations'
+    })
+
+    EntityRelation.belongsTo(Address,{
+        foreignKey: 'related_id',
+        constraints:false,
+        as: 'addresses'
+    })
+
+    Address.hasMany(EntityRelation,{
+        foreignKey: 'related_id',
+        constraints:false,
+        scope: { related_type: "ADDRESS" },
+        as: "addressRelations" 
+    })
+
+    EntityRelation.belongsTo(Document, { 
+        foreignKey: "related_id", 
         constraints: false, 
-        as: "seller"
+        as: "documents" 
     });
+
+    Document.hasMany(EntityRelation, { 
+        foreignKey: "related_id", 
+        constraints: false, 
+        scope: { related_type: "DOCUMENT" },
+        as: "documentRelations" 
+    });
+
+    EntityRelation.belongsTo(Bank,{
+        foreignKey: 'related_id',
+        constraints:false,
+        as: 'banks'
+    })
+
+    Bank.hasMany(EntityRelation,{
+        foreignKey: 'related_id',
+        constraints:false,
+        scope: { related_type: "BANK" },
+        as: "bankRelations"
+    })
+    
     // Many-to-Many: User <-> Role
     User.belongsToMany(Role, { through: UserRole, foreignKey: "userId", as: "roles" });
     Role.belongsToMany(User, { through: UserRole, foreignKey: "roleId", as: "users" });
@@ -55,7 +88,8 @@ const db = {
     UserRole,
     Bank,
     Document,
-    Seller
+    Seller,
+    EntityRelation
 }
 
 export default db

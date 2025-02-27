@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
@@ -11,6 +11,9 @@ import {
 } from '@heroicons/react/24/outline';
 import { Eye, CheckCircle, XCircle } from 'lucide-react';
 import DataGridComp from './DataGridComp';
+import { useGetApprovalDetailsMutation, useProcessApprovalMutation } from '../../features/approval/approvalApi';
+import useToast from '../../utils/toastNotofication';
+import CloudinaryPdfViewer from './CloudinaryPdfViewer';
 
 
 // const gridOptions = {
@@ -18,163 +21,33 @@ import DataGridComp from './DataGridComp';
 // };
 
 function UserApprovalGrid({ data }) {
+    const [approvalData,setApprovalData] = useState(null)
     const [selectedUser, setSelectedUser] = useState(null); // It is setting the user details
     const [showApproveModal, setShowApproveModal] = useState(false); // It's toggle the visibility of the approval modal
     const [showRejectModal, setShowRejectModal] = useState(false); // It's toggle the visibility of the rejection modal
     const [comment, setComment] = useState(''); // It's setting the comment for the approval/rejection modal
     const [showDocumentViewer, setShowDocumentViewer] = useState(false); // It's helps to show the document
     const [selectedDocument, setSelectedDocument] = useState(null); // It select the document
+    const [getApprovalDetails] = useGetApprovalDetailsMutation()
+    const [processApproval] = useProcessApprovalMutation()
+    const { showSuccess, showError } = useToast()
 
-    // Mock multiple users for demonstration
-    // const users = [
-    //     { ...data, id: 1 },
-    //     {
-    //         ...data,
-    //         id: 2,
-    //         details: {
-    //             ...data.details,
-    //             basic_details: {
-    //                 ...data.details.basic_details,
-    //                 business_name: "ABC Corp",
-    //                 owner_name: "Jane Smith"
-    //             }
-    //         },
-    //         status: "Approved"
-    //     },
-    //     {
-    //         ...data,
-    //         id: 3,
-    //         details: {
-    //             ...data.details,
-    //             basic_details: {
-    //                 ...data.details.basic_details,
-    //                 business_name: "XYZ Industries",
-    //                 owner_name: "Mike Johnson"
-    //             }
-    //         },
-    //         status: "Rejected"
-    //     }
-    // ];
+    // dynamic approval data from the backend
+    // Fetch approval data when the component mounts
+    useEffect(() => {
+        const fetchApprovalData = async () => {
+            try {
+                const response = await getApprovalDetails({ entityType: "User" }).unwrap();
+                setApprovalData(response.data)
+                if(response) showSuccess("approval data fetched successfully")
+            } catch (error) {
+                showError("Failed to fetch approval data.");
+                console.error("Error fetching approval data:", error);
+            }
+        };
 
-    // This is the dummy data
-    const mockData = [
-        {
-            _id: "67b37cb645e28a847aa842fc",
-            entityType: "User",
-            entityId: 7,
-            details: {
-                basic_details: {
-                    business_name: "RCCIIT",
-                    owner_name: "Rcc Institute of Information technology",
-                    business_email: "pramaniksoham1@gmail.com",
-                    business_mobile: "9564689847",
-                    gstin: "GST00125432",
-                    delivery_capacity: "249"
-                },
-                address: {
-                    address: "Beleghata,Kolkata-700015",
-                    city: "Kolkata",
-                    state: "West bengal",
-                    country: "india",
-                    postalCode: "700015"
-                },
-                bank: {
-                    account_holder_name: "rcc",
-                    bank_name: "uco",
-                    account_number: "12356855",
-                    ifsc_code: "sbin0013436",
-                    upi_id: "744582288@ybl",
-                    account_type: "current"
-                }
-            },
-            documents: [
-                {
-                    documentType: "identityproof",
-                    publicId: "woocommerce/seller_documents/fyleawjbycwqtp3wkgi1.pdf",
-                    fileType: "raw",
-                },
-                {
-                    documentType: "addressproof",
-                    publicId: "woocommerce/seller_documents/zkwyyg2onoprcrwfv1sy.pdf",
-                    fileType: "raw",
-                },
-                {
-                    documentType: "businesslicense",
-                    publicId: "woocommerce/seller_documents/cbljvwiqsbpz71fboyxe.pdf",
-                    fileType: "raw",
-                },
-                {
-                    documentType: "fssaicertificate",
-                    publicId: "woocommerce/seller_documents/ctynkym6ftevmuqduxyv.pdf",
-                    fileType: "raw",
-                }
-            ],
-            status: "Pending",
-            comments: "",
-        },
-        {
-            _id: "67b37cb645e28a847aa842fc",
-            entityType: "User",
-            entityId: 7,
-            details: {
-                basic_details: {
-                    business_name: "PGEC",
-                    owner_name: "Purulia Institute of Information technology",
-                    business_email: "pramaniksoham1@gmail.com",
-                    business_mobile: "9564689847",
-                    gstin: "GST00125432",
-                    delivery_capacity: "249"
-                },
-                address: {
-                    address: "Beleghata,Kolkata-700015",
-                    city: "Kolkata",
-                    state: "West bengal",
-                    country: "india",
-                    postalCode: "700015"
-                },
-                bank: {
-                    account_holder_name: "rcc",
-                    bank_name: "uco",
-                    account_number: "12356855",
-                    ifsc_code: "sbin0013436",
-                    upi_id: "744582288@ybl",
-                    account_type: "current"
-                }
-            },
-            documents: [
-                {
-                    documentType: "identityproof",
-                    publicId: "woocommerce/seller_documents/fyleawjbycwqtp3wkgi1.pdf",
-                    fileType: "raw",
-                },
-                {
-                    documentType: "addressproof",
-                    publicId: "woocommerce/seller_documents/zkwyyg2onoprcrwfv1sy.pdf",
-                    fileType: "raw",
-                },
-                {
-                    documentType: "businesslicense",
-                    publicId: "woocommerce/seller_documents/cbljvwiqsbpz71fboyxe.pdf",
-                    fileType: "raw",
-                },
-                {
-                    documentType: "fssaicertificate",
-                    publicId: "woocommerce/seller_documents/ctynkym6ftevmuqduxyv.pdf",
-                    fileType: "raw",
-                }
-            ],
-            status: "Pending",
-            comments: "",
-        }
-    ];
-
-    // const mockData = [
-    //     { id: 1, name: 'John Doe', email: 'john@example.com', age: 28, status: 'Active' },
-    //     { id: 2, name: 'Jane Smith', email: 'jane@example.com', age: 32, status: 'Inactive' },
-    //     { id: 3, name: 'Alice Brown', email: 'alice@example.com', age: 24, status: 'Pending' },
-    //     { id: 4, name: 'Bob Johnson', email: 'bob@example.com', age: 40, status: 'Active' },
-    //     { id: 5, name: 'Charlie Davis', email: 'charlie@example.com', age: 36, status: 'Inactive' },
-    //   ];
+        fetchApprovalData();
+    }, []);
 
     // This is the action buttons
     const ActionRenderer = (props) => {
@@ -241,14 +114,18 @@ function UserApprovalGrid({ data }) {
             sortable: true,
             filter: true,
             flex: 1,
-            cellRenderer: (params) => (
-                <span className={`px-3 py-1 rounded-full text-sm font-medium ${params.value === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
+            cellRenderer: (params) => {
+                if (params.data.isGroup) {
+                    return `<strong>${params.data.status}</strong>`;
+                  }
+                
+                return (<span className={`px-3 py-1 rounded-full text-sm font-medium ${params.value === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
                     params.value === 'Approved' ? 'bg-green-100 text-green-800' :
                         'bg-red-100 text-red-800'
                     }`}>
                     {params.value}
-                </span>
-            )
+                </span>)
+            }
         },
         {
             headerName: 'Actions',
@@ -257,18 +134,24 @@ function UserApprovalGrid({ data }) {
             minWidth: 150
         }
     ];
-    // const columnDefs = [
-    //     { field: 'id', headerName: 'ID', width: 90 },
-    //     { field: 'name', headerName: 'Name', width: 150 },
-    //     { field: 'email', headerName: 'Email', width: 200 },
-    //     { field: 'age', headerName: 'Age', width: 100, type: 'number' },
-    //     { field: 'status', headerName: 'Status', width: 120 },
-    //   ];
+    
+    
 
-    const handleApprove = () => {
+
+
+
+    const handleApprove = async() => {
         console.log('Approved with comment:', comment);
         setShowApproveModal(false);
         setComment('');
+        const {data:approvalStatus,error} = await processApproval(
+            {approvalId:selectedUser._id,comments:comment,status:"Approved"}
+        )
+        if(error){
+            console.log("Error",error);
+        }
+        console.log("Approval Status",approvalStatus);
+        
     };
 
     const handleReject = () => {
@@ -319,7 +202,7 @@ function UserApprovalGrid({ data }) {
                                     <div className="p-6">
                                         <div className="ag-theme-alpine w-full h-[600px]">
                                             <AgGridReact
-                                                rowData={mockData}
+                                                rowData={approvalData}
                                                 columnDefs={columnDefs}
                                                 pagination={true}
                                                 paginationPageSize={10}
@@ -559,7 +442,7 @@ function UserApprovalGrid({ data }) {
                         </div>
                         <div className="h-[calc(100%-4rem)] bg-gray-100 rounded-lg p-4">
                             {/* Placeholder for PDF Viewer - Replace with actual PDF viewer component */}
-                            <div className="flex items-center justify-center h-full border-2 border-dashed border-gray-300 rounded-lg">
+                            {/* <div className="flex items-center justify-center h-full border-2 border-dashed border-gray-300 rounded-lg">
                                 <div className="text-center">
                                     <DocumentTextIcon className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                                     <p className="text-gray-500">
@@ -569,7 +452,8 @@ function UserApprovalGrid({ data }) {
                                         Document ID: {selectedDocument.publicId}
                                     </p>
                                 </div>
-                            </div>
+                            </div> */}
+                            <CloudinaryPdfViewer publicId={selectedDocument.publicId}/>
                         </div>
                     </div>
                 </div>

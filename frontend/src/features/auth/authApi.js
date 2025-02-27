@@ -63,6 +63,13 @@ export const authApi = createApi({
                 body: credentials
             })
         }),
+        retriveUploadUrl: builder.mutation({
+            query: (credentials) => ({
+                url: '/retrive-upload-url',
+                method: 'POST',
+                body: credentials
+            })
+        }),
     })
 })
 
@@ -74,5 +81,6 @@ export const {
     useGetRoleQuery,
     useGetUserApprovalQuery,
     useFetchUserQuery,
-    useGenerateUploadUrlMutation
+    useGenerateUploadUrlMutation,
+    useRetriveUploadUrlMutation
 } = authApi

@@ -8,14 +8,14 @@ const Bank = sequelize.define('Bank',{
         primaryKey:true,
         autoIncrement:true
     },
-    user_id:{
-        type:DataTypes.INTEGER,
-        allowNull :false,
-        references :{
-            model:User,
-            key:'id'
-        },
-        onDelete :'CASCADE'
+    entity_type: {
+        type: DataTypes.ENUM("CUSTOMER", "SELLER", "LOGISTICS"), // Add more entity types if needed
+        allowNull: false,
+    },
+    entity_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        comment: "ID of the user, seller, or logistic entity",
     },
     account_holder_name :{
         type:DataTypes.STRING(100),
@@ -48,6 +48,6 @@ const Bank = sequelize.define('Bank',{
         type: DataTypes.BOOLEAN,
         defaultValue: true
     }
-},{tableName:'bank',timeStamps:true})
+},{tableName:'banks',timestamps:false})
 
 export default Bank

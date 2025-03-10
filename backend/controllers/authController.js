@@ -136,7 +136,7 @@ export const loginUser = asyncHandler(async (req, res) => {
             type: sequelize.QueryTypes.SELECT
         }
     );
-
+    
     // If no response has come
     // Then no user has found
     if (!existingUser) return ResponseHandler.error(res, null, "Wrong Email or Mobile number", 401);

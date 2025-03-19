@@ -20,8 +20,9 @@ const menuItems = [
         roles: [1],
         submenu: [
             { name: 'All Products', path: '/products' },
-            { name: 'Add Product', path: '/products/add' },
-            { name: 'Categories', path: '/products/categories' },
+            { name: 'Add Product', path: '/admin/products/add' },
+            { name: 'Categories', path: '/admin/products/categories' },
+            { name: 'Sub Categories', path: '/admin/products/subcategories' },
             { name: 'Inventory', path: '/products/inventory' }
         ]
     },

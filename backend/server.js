@@ -9,6 +9,7 @@ import errorHandler from './middleware/errorHandler.js';
 import authRouter from './routes/authRoutes.js';
 import menuRouter from './routes/menuRoutes.js';
 import approvalRouter from './routes/approvalRoutes.js';
+import categoryRouter from './routes/categoryRoutes.js';
 import client from './config/redisClient.js';
 import db from './models/index.js';
 
@@ -100,6 +101,7 @@ const listKeys = async () => {
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/admin/dashboard', menuRouter);
 app.use('/api/v1/approval', approvalRouter);
+app.use('/api/v1/products/category', categoryRouter);
 
 // Basic test route
 app.get('/', (req, res) => {

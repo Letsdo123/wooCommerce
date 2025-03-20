@@ -10,6 +10,11 @@ const approvalSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.Mixed,
         required: true
     },
+    entitySubType: {
+        type: String,
+        enum: ['SELLER', 'LOGISTICS', 'CUSTOMER'],
+        required: true
+    },    
     details: {
         type: Object,
         required: true
@@ -34,13 +39,13 @@ const approvalSchema = new mongoose.Schema({
             }
         }
     ],
-    adminId: {
-        type: Number,
+    actionBy: {
+        type: String,
         default: null
     },
     status: {
         type: String,
-        enum: ['Pending', 'Approved','Reapply','Rejected'],
+        enum: ['Pending', 'Approved','Re-apply','Rejected'],
         default: 'Pending',
     },
     comments: {

@@ -1,5 +1,5 @@
 import express from'express'
-import { createRole, getAllRoles, getUserApprovalDetails, loginUser, logoutUser, registerUser, requestPasswordReset, resetPassword, verifyUser } from '../controllers/authController.js'
+import { createRole, getAllRoles, getUserApprovalDetails, getUserDetails, loginUser, logoutUser, registerUser, requestPasswordReset, resetPassword, verifyUser } from '../controllers/authController.js'
 import { authenticateToken, restrictTo } from '../middleware/authMiddleware.js'
 import { generateSignedUrl, getSignedPdfUrl } from '../controllers/ImageUploadController.js'
 
@@ -25,5 +25,7 @@ router.route("/get-role").get(getAllRoles)
 // handilg the approval details
 router.route("/get-user-approval").get(authenticateToken,()=>{restrictTo(1)},getUserApprovalDetails)
 
+// handing the user details
+router.route("/get-user-details").post(authenticateToken,getUserDetails)
 
 export default router

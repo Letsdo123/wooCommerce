@@ -70,6 +70,13 @@ export const authApi = createApi({
                 body: credentials
             })
         }),
+        getUserData: builder.mutation({
+            query: (credentials) => ({
+                url: '/get-user-details',
+                method: 'POST',
+                body: credentials
+            })
+        }),
     })
 })
 
@@ -82,5 +89,6 @@ export const {
     useGetUserApprovalQuery,
     useFetchUserQuery,
     useGenerateUploadUrlMutation,
-    useRetriveUploadUrlMutation
+    useRetriveUploadUrlMutation,
+    useGetUserDataMutation
 } = authApi

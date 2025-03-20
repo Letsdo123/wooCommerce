@@ -9,11 +9,11 @@ export const menuApi = createApi({
     }),
     endpoints: (builder) => ({
         fetchMenuItem: builder.query({
-            query: () => ({ url: "/menus" })
+            query: (credentials) => ({ url: "/menus",method: 'POST',body: {userRoles:credentials} })
         }),
     })
 })
 
 export const {
-    useFetchMenuItemQuery
+    useFetchMenuItemQuery,
 } = menuApi

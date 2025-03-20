@@ -1,8 +1,11 @@
 import React from "react";
 import { Heart, SearchIcon, ShoppingCart, User } from "lucide-react";
 import Logo from "./Logo.jsx";
+import AccountDropdown from "./AccountDropdown.jsx";
 
 const Header = () => {
+  // Example user with multiple roles
+  const userRoles = ['superAdmin', 'seller', 'customer', 'logistics'];
   return (
     <header className="bg-white shadow-md border-b">
       <div className="container mx-auto flex justify-between items-center">
@@ -33,8 +36,9 @@ const Header = () => {
         {/* Icons Section */}
         <div className="flex items-center space-x-6">
           <div className="flex items-center space-x-2 cursor-pointer">
-            <User className="h-6 w-6 text-gray-700" />
-            <span className="text-gray-700 font-semibold">Account</span>
+            {/* <User className="h-6 w-6 text-gray-700" />
+            <span className="text-gray-700 font-semibold">Account</span> */}
+            <AccountDropdown userRoles={userRoles} />
           </div>
           <div className="flex items-center space-x-2 cursor-pointer">
             <Heart className="h-6 w-6 text-gray-700"/>

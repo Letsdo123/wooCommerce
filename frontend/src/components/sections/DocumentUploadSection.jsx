@@ -12,7 +12,7 @@ function DocumentUploadSection({ control }) {
           name="documents.identityProof"
           label="Identity Proof"
           description="Upload Aadhar, PAN , or Voter ID (Max 5MB)"
-          accept=".pdf,.jpg,.jpeg,.png"
+          accept=".jpg,.jpeg,.png"
           control={control}
           required
         />
@@ -20,7 +20,7 @@ function DocumentUploadSection({ control }) {
           name="documents.addressProof"
           label="Address Proof"
           description="Upload any government address proof (Max 5MB)"
-          accept=".pdf,.jpg,.jpeg,.png"
+          accept=".jpg,.jpeg,.png"
           control={control}
           required
         />
@@ -28,7 +28,7 @@ function DocumentUploadSection({ control }) {
           name="documents.businessLicense"
           label="Business License"
           description="Upload your business registration doc (Max 5MB)"
-          accept=".pdf,.jpg,.jpeg,.png"
+          accept=".jpg,.jpeg,.png"
           control={control}
           required
         />
@@ -36,7 +36,7 @@ function DocumentUploadSection({ control }) {
           name="documents.fssaiCertificate"
           label="FSSAI Certificate"
           description="Upload your valid FSSAI license (Max 5MB)"
-          accept=".pdf,.jpg,.jpeg,.png"
+          accept=".jpg,.jpeg,.png"
           control={control}
           required
         />

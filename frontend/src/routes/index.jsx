@@ -15,6 +15,7 @@ import UserApproval from "../pages/dashboard/UserApproval";
 import SellerRegistrationForm from "../pages/public/SellerRegistrationForm";
 import DeliveryPartnerForm from "../pages/public/DeliveryPartnerForm";
 import UserApprovalGrid from "../components/public/UserApprovalGrid";
+import SellerProfile from "../components/public/SellerProfile";
 
 const router = createBrowserRouter([{
     path: "/",
@@ -28,18 +29,19 @@ const router = createBrowserRouter([{
                 {path:"registration/user",element:<SignupForm/>},
                 {path:"registration/seller",element:<SellerRegistrationForm/>},
                 {path:"registration/logistic",element:<DeliveryPartnerForm/>},
-                {path:"login",element:<LoginPage/>}
+                {path:"login",element:<LoginPage/>},
+                {path:"profile/seller",element:<SellerProfile/>}
             ]
         },
         // private admin routes with dashboard layout
         {
             path: "admin",
-            // element:(
-            //     <PrivateRoute role={["admin","super-admin","seller"]}>
-            //         <DashboardLayout/>
-            //     </PrivateRoute>
-            // ),
-            element:<DashboardLayout/>,
+            element:(
+                <PrivateRoute role={["SUPER ADMIN","SELLER","LOGISTICS"]}>
+                    <DashboardLayout/>
+                </PrivateRoute>
+            ),
+            // element:<DashboardLayout/>,
             children:[
                 {index:true,element:<ECommerce/>},
                 {path:"products",element:<Products/>},

@@ -11,6 +11,12 @@ import mongoose from 'mongoose'
 import sequelize from '../config/sqlClient.js'
 import Approval from '../models/approval.model.js'
 import { createUser } from '../services/userCreationService.js'
+import EntityRelation from '../models/entity_relation.model.js'
+import Document from '../models/document.model.js'
+import Bank from '../models/bank.model.js'
+import Address from '../models/user.address.model.js'
+import { Op } from 'sequelize'
+import Seller from '../models/user.seller.model.js'
 
 // register a new user
 export const registerUser = asyncHandler(async (req, res) => {
@@ -51,7 +57,7 @@ export const registerUser = asyncHandler(async (req, res) => {
     await sendOtpEmail(email, { otp })
 
     console.log("Otp send successfully send from the backend");
-    return ResponseHandler.success(res, { temoparyUserDetails }, 'Otp has been send sucessfully', 201)
+    return ResponseHandler.success(res, { temoparyUserDetails }, 'Otp has been sent sucessfully', 201)
 })
 
 // This is the function to verify a user
@@ -60,8 +66,8 @@ export const verifyUser = asyncHandler(async (req, res) => {
     // console.log("Data has come from the frontend to backend", identifier, code)
     console.log("It is coming under verify user");
     // checking without frontend
-    const identifier = 'ayan@gmail.com'
-    const code = '260255'
+    const identifier = 'ariyan.mk@gmail.com'
+    const code = '126777'
 
     // getting the temporary user from the reddis db
     const tempUser = await redisClient.get(`temp_user:${identifier}`)
@@ -78,25 +84,9 @@ export const verifyUser = asyncHandler(async (req, res) => {
 
         // if OTP is correct then we will create a new user
         const newUserId = await createUser({ name, email, mobile, gender, password, address, city, state, country, postal_code })
-        console.log("New user id",newUserId);
-        
-        // userroll will be created as customer by default
-        const [customerRole] = await sequelize.query(
-            `SELECT id FROM roles WHERE name = 'CUSTOMER'`,
-            {
-                type:sequelize.QueryTypes.SELECT
-            }
-        )
-        console.log("Customer role details",customerRole);
-        const customerRoleId = customerRole.id;
-        const userRole = await sequelize.query(
-            `INSERT INTO user_roles (userId,roleId,status,createdAt,updatedAt) values (:newUserId,:customerRoleId,"approved",now(),now())`,
-            {
-                replacements: { newUserId, customerRoleId },
-                type: sequelize.QueryTypes.INSERT
-            }
-        )
-        console.log("User role creation status", userRole);
+        console.log("New user id", newUserId);
+
+        if (newUserId == undefined) ResponseHandler.error(res, null, "Internal server error", 500)
         // creating both token access token & refresh token
         const accessToken = generateAccessToken(newUserId)
         const refreshToken = generateRefreshToken(newUserId)
@@ -136,8 +126,8 @@ export const loginUser = asyncHandler(async (req, res) => {
             type: sequelize.QueryTypes.SELECT
         }
     );
-    
-    // If no response has come
+
+    // If existingUser is undefined
     // Then no user has found
     if (!existingUser) return ResponseHandler.error(res, null, "Wrong Email or Mobile number", 401);
 
@@ -148,12 +138,23 @@ export const loginUser = asyncHandler(async (req, res) => {
     // Check if the password is correct
     // console.log("both password details:", password, user[0].password);
     // const isPasswordCorrect = await bcrypt.compare(password.trim(), user[0].password);
-
     const isPasswordCorrect = existingUser.password === password
     console.log("Password is correct", isPasswordCorrect);
     if (!isPasswordCorrect) return ResponseHandler.error(res, null, "Wrong Password", 401);  // Note the return here
 
     console.log("Password is correct");
+
+    const userId = existingUser.id
+    // now this is confirm that the user is valid
+    // so we need to get the details of the role of the user
+    const userRoles = await sequelize.query(
+        `SELECT ur.roleId,r.name,ur.entityType,ur.entityId FROM user_roles ur JOIN roles r ON ur.roleId = r.id WHERE ur.userId = :userId`,
+        {
+            replacements: { userId },
+            type: sequelize.QueryTypes.SELECT
+        }
+    )
+    console.log("UserRole details:", userRoles);
     // Create access and refresh tokens
     const accessToken = generateAccessToken(existingUser.id);  // Use user[0]._id
     const refreshToken = generateRefreshToken(existingUser.id); // Use user[0]._id
@@ -170,7 +171,7 @@ export const loginUser = asyncHandler(async (req, res) => {
     });
 
     // Send success response
-    return ResponseHandler.success(res, { profile: existingUser, accessToken }, 'User Logged in successfully!', 201);
+    return ResponseHandler.success(res, { profile: existingUser, roles: userRoles, accessToken }, 'User Logged in successfully!', 201);
 });
 
 
@@ -268,7 +269,7 @@ export const getUserApprovalDetails = asyncHandler(async (req, res) => {
 // This is the controllers that handles the role management
 export const createRole = asyncHandler(async (req, res) => {
     const { name, description } = req.body
-    console.log("Name and description of the roles:",name,description);
+    console.log("Name and description of the roles:", name, description);
     console.log("Request has come to the create Role controller");
     console.log("User details fetched from the middleware", req.user);
     const createdBy = req.user.name
@@ -295,3 +296,111 @@ export const getAllRoles = asyncHandler(async (req, res) => {
     if (!roles) return ResponseHandler.error(res, null, "No roles found", 404)
     else return ResponseHandler.success(res, roles, "Roles fetched successfully", 200)
 })
+
+// Here we will get the user details
+export const getUserDetails = asyncHandler(async (req, res) => {
+    async function cleanData(rawData) {
+        const result = {};
+    
+        for (const item of rawData) {
+            const { entity_type, entity_id, related_type } = item;
+    
+            // Fetch basic user details asynchronously
+            const basicUserDetails = await Seller.findOne({
+                where: { id: entity_id }, // Assuming entity_id corresponds to user_id
+            });
+    
+            // Initialize the entity type and ID if not already present
+            if (!result[entity_type]) {
+                result[entity_type] = {
+                    entity_type,
+                    entity_id,
+                    basicDetails: basicUserDetails ? basicUserDetails.dataValues : null, // Add basicDetails
+                    address: [],
+                    documents: [],
+                    bank_details: []
+                };
+            }
+    
+            // Add related data to the appropriate array
+            if (related_type === "ADDRESS" && item.addresses) {
+                result[entity_type].address.push(item.addresses.dataValues); // Extract dataValues
+            } else if (related_type === "DOCUMENT" && item.documents) {
+                result[entity_type].documents.push(item.documents.dataValues); // Extract dataValues
+            } else if (related_type === "BANK" && item.banks) {
+                result[entity_type].bank_details.push(item.banks.dataValues); // Extract dataValues
+            }
+        }
+    
+        return result;
+    }
+    try {
+        const { entityIds, entityTypes } = req.body;
+        const userId = req.user.id;
+        console.log("User id:", userId);
+        if (!userId) {
+            return ResponseHandler.error(res, null, "User ID not found", 400);
+        }
+
+        let entityIdSet = new Set(entityIds || [userId]);
+        let entityTypeSet = new Set(entityTypes || []);
+
+        if (!entityIds || !entityTypes) {
+            const userRoles = await EntityRelation.findAll({
+                where: { entity_id: userId },
+                attributes: ["entity_id", "entity_type"],
+            });
+
+            if (!userRoles.length) {
+                return ResponseHandler.error(res, null, "User roles not found", 404);
+            }
+
+            userRoles.forEach((role) => {
+                entityIdSet.add(role.entity_id);
+                entityTypeSet.add(role.entity_type);
+            });
+        }
+        console.log("Entity IDs:", [...entityIdSet]);
+        console.log("Entity Types:", [...entityTypeSet]);
+        // const basicUserDetails = await Seller.findOne({
+        //     where: { user_id: userId },
+        // })
+        const userDetails = await EntityRelation.findAll({
+            where: {
+                entity_id: [...entityIdSet],
+                entity_type: [...entityTypeSet],
+            },
+            include: [
+                {
+                    model: Document,
+                    as: "documents",
+                    required: false,
+                    where: { entity_id: { [Op.in]: [...entityIdSet] } }, // Ensure matching entity_id
+                },
+                {
+                    model: Bank,
+                    as: "banks",
+                    required: false,
+                    where: { entity_id: { [Op.in]: [...entityIdSet] } },
+                },
+                {
+                    model: Address,
+                    as: "addresses",
+                    required: false,
+                    where: { entity_id: { [Op.in]: [...entityIdSet] } },
+                },
+            ],
+        });
+        // console.log('Basic User Details:', basicUserDetails);
+        const modifiedData = await cleanData(userDetails);
+        console.log("Modified Data:", modifiedData);
+        // const updatedData = {
+        //     basicDetails: basicUserDetails.dataValues,
+        //     extraDetails: modifiedData
+        // }
+        return ResponseHandler.success(res, modifiedData, "User details fetched successfully", 200);
+    } catch (error) {
+        console.error("Error fetching user details:", error);
+        return ResponseHandler.error(res, null, "Error fetching user details", 500);
+    }
+});  

@@ -4,6 +4,7 @@ import asyncHandler from "../../utils/asyncHandler";
 import axios from "axios";
 import uploadImageUrl from "../../utils/imageUpload";
 import { useGenerateUploadUrlMutation, useGetRoleQuery, useRegistrationMutation } from "../../features/auth/authApi";
+import useToast from "../../utils/toastNotofication";
 
 const SignupForm = () => {
   const [step, setStep] = useState(1);
@@ -13,6 +14,9 @@ const SignupForm = () => {
     watch,
     formState: { errors },
   } = useForm();
+
+  // importing the toast
+  const {showSuccess,showError} = useToast()
 
   const nextStep = () => setStep((prev) => prev + 1);
   const prevStep = () => setStep((prev) => prev - 1);
@@ -27,9 +31,11 @@ const SignupForm = () => {
     // console.log("Form Data: ", data);
     const userData = {...formData,name: formData.firstName + " " + formData.lastName,postal_code:formData.postalCode}
     console.log(userData);
-    const {data} = await registration({
+    const {data,error} = await registration({
       userData
     })
+    if(error) showError("Registration failed")
+    if(data) showSuccess(data.message)
     console.log("The registration data is: ", data);
   };
 

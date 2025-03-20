@@ -6,6 +6,6 @@ const router = express.Router()
 
 // Base url of here 'http://localhost:5000/api/v1/admin/dasboard'
 
-router.route("/menus").get(getMenuItems)
+router.route("/menus").post(getMenuItems)
 
 export default router

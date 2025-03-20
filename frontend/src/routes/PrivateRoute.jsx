@@ -1,13 +1,16 @@
 import { useSelector } from "react-redux"
 import { Navigate } from "react-router-dom"
 
-const PrivateRoute = ({children,role})=>{
-    const {user} = useSelector((state)=>state.auth)
-
+const PrivateRoute = ({ children, role }) => {
+    const { user, roles } = useSelector((state) => state.auth)
+    const userRoles = roles.map((role) => role.name)
     // if no user found then redirected to login page
-    if(!user) return <Navigate to="/login" replace/>
+    if (!user) return <Navigate to="/login" replace />
 
-    if(role && ! role.includes(user.role)) return <Navigate to="/unauthorized" replace/>
+    // Check if user has at least one required role
+    if (role && !role.some(r => userRoles.includes(r))) {
+        return <Navigate to="/unauthorized" replace />;
+    }
 
     return children;
 }

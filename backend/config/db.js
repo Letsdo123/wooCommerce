@@ -10,15 +10,15 @@ const createFirstAdminUser = asyncHandler(async () => {
     // User.collection.dropIndex('phone_1');
     console.log("It is coming under createFirst User");
     let existingSuperAdmin = await User.findOne({ name: 'Super Admin' });
-    let existingRole = await Role.findOne({ name: 'super_admin' });
+    let existingRole = await Role.findOne({ name: 'SUPER ADMIN' });
     // This creates the super admin role first
     // if doesn't exists
     if (!existingRole) {
         // basic details of super admin
         const role = {
-            name: 'super_admin',
-            description: 'Super Admin Role',
-            createdBy: 'super_admin'
+            name: 'SUPER ADMIN',
+            description: 'Super Admin Role has access to everythings.',
+            createdBy: 'Woocommerce Super Admin'
         }
         existingRole = await Role.create(role);
         console.log('Super admin created successfully!');
@@ -29,7 +29,7 @@ const createFirstAdminUser = asyncHandler(async () => {
     };
     if (!existingSuperAdmin) {
         const firstAdmin = {
-            name: 'Super Admin',
+            name: 'Woocommerce Super Admin',
             email: 'superadmin@woocommerce.com',
             mobile: "9003004565",
             isVerified: true,
@@ -42,6 +42,8 @@ const createFirstAdminUser = asyncHandler(async () => {
         const userRoleDetails = {
             userId: existingSuperAdmin.id,
             roleId: existingRole.id,
+            entityId: existingSuperAdmin.id,
+            entityType: 'SUPER ADMIN',
             status: "approved"
         }
         const firstUserRole = await UserRole.create(userRoleDetails)

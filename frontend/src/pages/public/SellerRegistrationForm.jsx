@@ -63,6 +63,7 @@ function SellerRegistrationForm() {
         console.log("Updated documents", updatedDocuments);
         const { data: approvalStatus, error } = await createApproval({
             entityType: 'User',
+            entitySubType: 'SELLER',
             details: data,
             documents: updatedDocuments
         })

@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
-
+import unauthorized_access from "../assets/images/unauthorized_access.gif";
 const Unauthorized = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="max-w-2xl p-8 bg-white shadow-lg rounded-2xl text-center">
         <img
-          src="https://illustrations.popsy.co/white/forbidden.svg"
+          src={unauthorized_access}
           alt="Unauthorized Access"
           className="mx-auto w-64"
         />

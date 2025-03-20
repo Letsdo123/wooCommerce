@@ -9,6 +9,7 @@ import ECommerce from "../pages/dashboard/ECommerce";
 import Products from "../pages/dashboard/Products";
 import Unauthorized from "../pages/Unauthorized";
 import RolePermissions from "../pages/dashboard/RolePermission";
+import ProductCategory from "../pages/dashboard/ProductCategory";
 import LoginPage from "../pages/public/LoginPage";
 import Role from "../pages/dashboard/Role";
 import UserApproval from "../pages/dashboard/UserApproval";
@@ -16,6 +17,8 @@ import SellerRegistrationForm from "../pages/public/SellerRegistrationForm";
 import DeliveryPartnerForm from "../pages/public/DeliveryPartnerForm";
 import UserApprovalGrid from "../components/public/UserApprovalGrid";
 import SellerProfile from "../components/public/SellerProfile";
+import ProductSubCategory from "../pages/dashboard/ProductSubCategory";
+import AddProduct from "../pages/dashboard/AddProduct";
 
 const router = createBrowserRouter([{
     path: "/",
@@ -45,8 +48,11 @@ const router = createBrowserRouter([{
             children:[
                 {index:true,element:<ECommerce/>},
                 {path:"products",element:<Products/>},
+                {path:"products/add",element:<AddProduct/>},
                 {path:"role-management",element:<Role/>},
-                {path:"user-approval",element:<UserApprovalGrid/>}
+                {path:"user-approval",element:<UserApprovalGrid/>},
+                {path: "products/categories", element: <ProductCategory />},
+                {path: "products/subcategories", element: <ProductSubCategory />},
             ]
         },
         {

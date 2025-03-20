@@ -18,7 +18,8 @@ import Address from '../models/user.address.model.js'
 import { Op } from 'sequelize'
 import Seller from '../models/user.seller.model.js'
 
-// register a new user
+// register a new user 
+// ayan feature
 export const registerUser = asyncHandler(async (req, res) => {
     const { name, email, mobile, gender, password, address, city, state, country, postal_code } = req.body.userData
     console.log("Registration request has come to the controller", req.body);

@@ -2,10 +2,12 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { authApi } from '../features/auth/authApi'
 import authReducer from '../features/auth/authSlice'
 import menuReducer from '../features/menu/menuSlice'
+import categoryReducer from '../features/product/categorySlice'
 import { persistReducer, persistStore } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import { menuApi } from '../features/menu/menuApi'
 import { approvalApi } from '../features/approval/approvalApi'
+import { categoryApi } from '../features/product/categoryApi'
 
 // configure the presists
 // using local storage for 
@@ -21,12 +23,14 @@ const rootReducer = combineReducers({
     [menuApi.reducerPath]: menuApi.reducer,
     menu: persistReducer(persistConfig, menuReducer),
     [approvalApi.reducerPath]: approvalApi.reducer,
+    productCategory: persistReducer(persistConfig, categoryReducer),
+    [categoryApi.reducerPath]: categoryApi.reducer,
 })
 
 // This is the configuration of the store
 export const store = configureStore({
     reducer: rootReducer,
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }).concat(authApi.middleware).concat(menuApi.middleware).concat(approvalApi.middleware)
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }).concat(authApi.middleware).concat(menuApi.middleware).concat(approvalApi.middleware).concat(categoryApi.middleware)
 })
 
 export const persistor = persistStore(store)

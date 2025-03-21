@@ -19,6 +19,8 @@ import UserApprovalGrid from "../components/public/UserApprovalGrid";
 import SellerProfile from "../components/public/SellerProfile";
 import ProductSubCategory from "../pages/dashboard/ProductSubCategory";
 import AddProduct from "../pages/dashboard/AddProduct";
+import PageTest from "../pages/test documentation/PageTest";
+import ProfileManager from "../components/public/ProfileManager";
 
 const router = createBrowserRouter([{
     path: "/",
@@ -33,7 +35,7 @@ const router = createBrowserRouter([{
                 {path:"registration/seller",element:<SellerRegistrationForm/>},
                 {path:"registration/logistic",element:<DeliveryPartnerForm/>},
                 {path:"login",element:<LoginPage/>},
-                {path:"profile/seller",element:<SellerProfile/>}
+                {path:"profile/manage",element:<ProfileManager/>}
             ]
         },
         // private admin routes with dashboard layout
@@ -53,6 +55,7 @@ const router = createBrowserRouter([{
                 {path:"user-approval",element:<UserApprovalGrid/>},
                 {path: "products/categories", element: <ProductCategory />},
                 {path: "products/subcategories", element: <ProductSubCategory />},
+                {path: "tab-test", element: <PageTest />}
             ]
         },
         {

@@ -55,120 +55,126 @@ function ProfileView({ data, documents, onEdit }) {
 
     if (!profileData || Object.keys(profileData).length === 0) return <p>Loading...</p>;
     else
-    return (
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-            {/* Header */}
-            <div className="relative h-32 bg-gradient-to-r from-primary to-red-500">
-                <div className="absolute -bottom-12 left-8">
-                    <div className="w-24 h-24 rounded-full bg-white p-1">
-                        <div className="w-full h-full rounded-full bg-primary/10 flex items-center justify-center">
-                            <FiUser className="w-12 h-12 text-primary" />
+        return (
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+                {/* Header */}
+                <div className="relative h-32 bg-gradient-to-r from-primary to-red-500">
+                    <div className="absolute -bottom-12 left-8">
+                        <div className="w-24 h-24 rounded-full bg-white p-1">
+                            <div className="w-full h-full rounded-full bg-primary/10 flex items-center justify-center">
+                                <FiUser className="w-12 h-12 text-primary" />
+                            </div>
                         </div>
                     </div>
+                    <button
+                        onClick={handleEditClick}
+                        className="absolute top-4 right-4 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-lg text-white hover:bg-white/30 transition-colors flex items-center space-x-2"
+                    >
+                        <FiEdit className="w-4 h-4" />
+                        <span>Edit Profile</span>
+                    </button>
                 </div>
-                <button
-                    onClick={handleEditClick}
-                    className="absolute top-4 right-4 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-lg text-white hover:bg-white/30 transition-colors flex items-center space-x-2"
-                >
-                    <FiEdit className="w-4 h-4" />
-                    <span>Edit Profile</span>
-                </button>
-            </div>
 
-            {/* Content */}
-            <div className="pt-16 px-8 pb-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {/* Business Information */}
-                    <div className="space-y-6">
-                        <h3 className="text-lg font-semibold text-gray-900 pb-2 border-b border-gray-200">
-                            Business Information
-                        </h3>
+                {/* Content */}
+                <div className="pt-16 px-8 pb-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        {/* Business Information */}
+                        <div className="space-y-6">
+                            <h3 className="text-lg font-semibold text-gray-900 pb-2 border-b border-gray-200">
+                                Business Information
+                            </h3>
 
-                        <div className="space-y-4">
-                            <div className="flex items-start space-x-3">
-                                <FiUser className="w-5 h-5 text-gray-400 mt-1" />
-                                <div>
-                                    <p className="text-sm text-gray-500">Business Name</p>
-                                    <p className="font-medium text-gray-900">{profileData?.basicDetails?.business_name}</p>
+                            <div className="space-y-4">
+                                <div className="flex items-start space-x-3">
+                                    <FiUser className="w-5 h-5 text-gray-400 mt-1" />
+                                    <div>
+                                        <p className="text-sm text-gray-500">Business Name</p>
+                                        <p className="font-medium text-gray-900">{profileData?.basicDetails?.business_name}</p>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div className="flex items-start space-x-3">
-                                <FiUser className="w-5 h-5 text-gray-400 mt-1" />
-                                <div>
-                                    <p className="text-sm text-gray-500">Owner Name</p>
-                                    <p className="font-medium text-gray-900">{profileData?.basicDetails?.owner_name}</p>
+                                <div className="flex items-start space-x-3">
+                                    <FiUser className="w-5 h-5 text-gray-400 mt-1" />
+                                    <div>
+                                        <p className="text-sm text-gray-500">Owner Name</p>
+                                        <p className="font-medium text-gray-900">{profileData?.basicDetails?.owner_name}</p>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div className="flex items-start space-x-3">
-                                <FiMail className="w-5 h-5 text-gray-400 mt-1" />
-                                <div>
-                                    <p className="text-sm text-gray-500">Email</p>
-                                    <p className="font-medium text-gray-900">{profileData?.basicDetails?.business_email}</p>
+                                <div className="flex items-start space-x-3">
+                                    <FiMail className="w-5 h-5 text-gray-400 mt-1" />
+                                    <div>
+                                        <p className="text-sm text-gray-500">Email</p>
+                                        <p className="font-medium text-gray-900">{profileData?.basicDetails?.business_email}</p>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div className="flex items-start space-x-3">
-                                <FiPhone className="w-5 h-5 text-gray-400 mt-1" />
-                                <div>
-                                    <p className="text-sm text-gray-500">Mobile</p>
-                                    <p className="font-medium text-gray-900">{profileData?.basicDetails?.business_mobile}</p>
+                                <div className="flex items-start space-x-3">
+                                    <FiPhone className="w-5 h-5 text-gray-400 mt-1" />
+                                    <div>
+                                        <p className="text-sm text-gray-500">Mobile</p>
+                                        <p className="font-medium text-gray-900">{profileData?.basicDetails?.business_mobile}</p>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div className="flex items-start space-x-3">
-                                <FiDollarSign className="w-5 h-5 text-gray-400 mt-1" />
-                                <div>
-                                    <p className="text-sm text-gray-500">GSTIN</p>
-                                    <p className="font-medium text-gray-900">{profileData?.basicDetails?.gstin}</p>
+                                <div className="flex items-start space-x-3">
+                                    <FiDollarSign className="w-5 h-5 text-gray-400 mt-1" />
+                                    <div>
+                                        <p className="text-sm text-gray-500">GSTIN</p>
+                                        <p className="font-medium text-gray-900">{profileData?.basicDetails?.gstin}</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    {/* Address Information */}
-                    {/* <div className="space-y-6">
-                        <h3 className="text-lg font-semibold text-gray-900 pb-2 border-b border-gray-200">
-                            Address Information
-                        </h3>
+                        {/* Address Information */}
+                        <div className="space-y-6">
+                            <h3 className="text-lg font-semibold text-gray-900 pb-2 border-b border-gray-200">
+                                Address Information
+                            </h3>
 
-                        <div className="space-y-4">
-                            <div className="flex items-start space-x-3">
-                                <FiMapPin className="w-5 h-5 text-gray-400 mt-1" />
-                                <div>
-                                    <p className="text-sm text-gray-500">Business Address</p>
-                                    <p className="font-medium text-gray-900">{profileData.address.address}</p>
-                                    <p className="text-gray-600">
-                                        {profileData.address.city}, {profileData.address.state} - {profileData.address.postal_code}
-                                    </p>
-                                </div>
+                            <div className="space-y-4">
+                                {profileData?.address && profileData.address.map((address) => (
+                                    <div className="flex items-start space-x-3">
+                                        <FiMapPin className="w-5 h-5 text-gray-400 mt-1" />
+                                        <div>
+                                            <p className="text-sm text-gray-500">Business Address</p>
+                                            <p className="font-medium text-gray-900">{address.address}</p>
+                                            <p className="text-gray-600">
+                                                {address?.city}, {address?.state} - {address?.postal_code}
+                                            </p>
+                                        </div>
+                                    </div>
+                                ))}
+
                             </div>
                         </div>
-                    </div> */}
 
-                    {/* Bank Information */}
-                    {/* <div className="space-y-6">
-                        <h3 className="text-lg font-semibold text-gray-900 pb-2 border-b border-gray-200">
-                            Bank Information
-                        </h3>
+                        {/* Bank Information */}
+                        <div className="space-y-6">
+                            <h3 className="text-lg font-semibold text-gray-900 pb-2 border-b border-gray-200">
+                                Bank Information
+                            </h3>
 
-                        <div className="space-y-4">
-                            <div className="flex items-start space-x-3">
-                                <FiDollarSign className="w-5 h-5 text-gray-400 mt-1" />
-                                <div>
-                                    <p className="text-sm text-gray-500">Bank Details</p>
-                                    <p className="font-medium text-gray-900">{profileData.bank.bank_name}</p>
-                                    <p className="text-gray-600">Account: {profileData.bank.account_number}</p>
-                                    <p className="text-gray-600">IFSC: {profileData.bank.ifsc_code}</p>
-                                    <p className="text-gray-600">Type: {profileData.bank.account_type}</p>
-                                </div>
+                            <div className="space-y-4">
+                                {profileData?.bank_details && profileData.bank_details.map((bank) => (
+                                    < div className="flex items-start space-x-3" >
+                                        <FiDollarSign className="w-5 h-5 text-gray-400 mt-1" />
+                                        <div>
+                                            <p className="text-sm text-gray-500">Bank Details</p>
+                                            <p className="font-medium text-gray-900">{bank.bank_name}</p>
+                                            <p className="text-gray-600">Account: {bank.account_number}</p>
+                                            <p className="text-gray-600">IFSC: {bank.ifsc_code}</p>
+                                            <p className="text-gray-600">Type: {bank.account_type}</p>
+                                        </div>
+                                    </div>
+                                ))}
+
                             </div>
                         </div>
-                    </div> */}
 
-                    {/* Business Metrics */}
-                    {/* <div className="space-y-6">
+                        {/* Business Metrics */}
+                        <div className="space-y-6">
                         <h3 className="text-lg font-semibold text-gray-900 pb-2 border-b border-gray-200">
                             Business Metrics
                         </h3>
@@ -176,7 +182,7 @@ function ProfileView({ data, documents, onEdit }) {
                         <div className="grid grid-cols-2 gap-4">
                             <div className="bg-gray-50 rounded-lg p-4">
                                 <p className="text-sm text-gray-500">Delivery Capacity</p>
-                                <p className="text-2xl font-semibold text-gray-900">{profileData.delivery_capacity}</p>
+                                <p className="text-2xl font-semibold text-gray-900">{profileData?.basicDetails?.delivery_capacity}</p>
                                 <p className="text-xs text-gray-500">orders/day</p>
                             </div>
 
@@ -186,10 +192,10 @@ function ProfileView({ data, documents, onEdit }) {
                                 <p className="text-xs text-gray-500">lifetime</p>
                             </div>
                         </div>
-                    </div> */}
+                    </div>
 
-                    {/* Documents Section */}
-                    {/* {documents && (
+                        {/* Documents Section */}
+                        {documents && (
                         <div className="col-span-full space-y-6">
                             <h3 className="text-lg font-semibold text-gray-900 pb-2 border-b border-gray-200">
                                 Documents
@@ -228,24 +234,26 @@ function ProfileView({ data, documents, onEdit }) {
                                 ))}
                             </div>
                         </div>
-                    )} */}
+                    )}
+                    </div>
                 </div>
-            </div>
 
-            {/* Document Preview Modal */}
-            {previewUrl && (
-                <DocumentPreview url={previewUrl} onClose={() => setPreviewUrl(null)} />
-            )}
+                {/* Document Preview Modal */}
+                {
+                    previewUrl && (
+                        <DocumentPreview url={previewUrl} onClose={() => setPreviewUrl(null)} />
+                    )
+                }
 
-            {/* Edit Profile Modal */}
-            <EditProfileModal
-                isOpen={isEditModalOpen}
-                onClose={() => setIsEditModalOpen(false)}
-                data={profileData}
-                onUpdate={handleUpdate}
-            />
-        </div>
-    );
+                {/* Edit Profile Modal */}
+                <EditProfileModal
+                    isOpen={isEditModalOpen}
+                    onClose={() => setIsEditModalOpen(false)}
+                    data={profileData}
+                    onUpdate={handleUpdate}
+                />
+            </div >
+        );
 }
 
 export default ProfileView;

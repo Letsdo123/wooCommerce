@@ -107,20 +107,22 @@ const ProductCategory = () => {
 
     return (
         <div className="p-6">
+            {/* This is header part */}
             <div className="mb-6">
                 <h1 className="text-2xl font-bold">Product Category Management</h1>
                 <p className="text-gray-600">Manage product category</p>
             </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2">
+            {/* This is the tab part */}
+            <div className="">
+                <div className="lg:col-span-2 tab-header">
                     <div className="bg-white rounded-lg shadow mb-6">
                         <div className="border-b px-4">
+                            {/* tab button container */}
                             <div className="flex space-x-4">
                                 <button
                                     className={`py-4 px-4 focus:outline-none ${activeTab === 'categories'
-                                            ? 'border-b-2 border-primary text-primary'
-                                            : 'text-gray-500 hover:text-gray-700'
+                                        ? 'border-b-2 border-primary text-primary'
+                                        : 'text-gray-500 hover:text-gray-700'
                                         }`}
                                     onClick={() => setActiveTab('categories')}
                                 >
@@ -144,18 +146,23 @@ const ProductCategory = () => {
                             </div>
                         </div>
                     </div>
-
-                    <DataGrid
-                        columns={activeTab === 'categories' ? roleColumns : permissionColumns}
-                        data={activeTab === 'categories' ? roles : permissions}
-                    />
                 </div>
-
-                <div>
-                    <ProductCategoryForm
-                        type={activeTab === 'categories' ? 'category' : 'permission'}
-                        onSubmit={activeTab === 'categories' ? handleAddRole : handleAddPermission}
-                    />
+                {/* Product form  */}
+                <div className='tab-pane'>
+                    <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+                        <div className='data-grid-container'>
+                            <DataGrid
+                                columns={activeTab === 'categories' ? roleColumns : permissionColumns}
+                                data={activeTab === 'categories' ? roles : permissions}
+                            />
+                        </div>
+                        <div className='prodict-form-container'>
+                            <ProductCategoryForm
+                                type={activeTab === 'categories' ? 'category' : 'permission'}
+                                onSubmit={activeTab === 'categories' ? handleAddRole : handleAddPermission}
+                            />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

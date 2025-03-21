@@ -14,6 +14,7 @@ import DataGridComp from './DataGridComp';
 import { useGetApprovalDetailsMutation, useProcessApprovalMutation } from '../../features/approval/approvalApi';
 import useToast from '../../utils/toastNotofication';
 import CloudinaryPdfViewer from './CloudinaryPdfViewer';
+import GridManager from './GridManager';
 
 
 // const gridOptions = {
@@ -21,7 +22,7 @@ import CloudinaryPdfViewer from './CloudinaryPdfViewer';
 // };
 
 function UserApprovalGrid({ data }) {
-    const [approvalData,setApprovalData] = useState(null)
+    const [approvalData, setApprovalData] = useState(null)
     const [selectedUser, setSelectedUser] = useState(null); // It is setting the user details
     const [showApproveModal, setShowApproveModal] = useState(false); // It's toggle the visibility of the approval modal
     const [showRejectModal, setShowRejectModal] = useState(false); // It's toggle the visibility of the rejection modal
@@ -39,7 +40,7 @@ function UserApprovalGrid({ data }) {
             try {
                 const response = await getApprovalDetails({ entityType: "User" }).unwrap();
                 setApprovalData(response.data)
-                if(response) showSuccess("approval data fetched successfully")
+                if (response) showSuccess("approval data fetched successfully")
             } catch (error) {
                 showError("Failed to fetch approval data.");
                 console.error("Error fetching approval data:", error);
@@ -117,8 +118,8 @@ function UserApprovalGrid({ data }) {
             cellRenderer: (params) => {
                 if (params.data.isGroup) {
                     return `<strong>${params.data.status}</strong>`;
-                  }
-                
+                }
+
                 return (<span className={`px-3 py-1 rounded-full text-sm font-medium ${params.value === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
                     params.value === 'Approved' ? 'bg-green-100 text-green-800' :
                         'bg-red-100 text-red-800'
@@ -134,24 +135,19 @@ function UserApprovalGrid({ data }) {
             minWidth: 150
         }
     ];
-    
-    
 
-
-
-
-    const handleApprove = async() => {
+    const handleApprove = async () => {
         console.log('Approved with comment:', comment);
         setShowApproveModal(false);
         setComment('');
-        const {data:approvalStatus,error} = await processApproval(
-            {approvalId:selectedUser._id,comments:comment,status:"Approved"}
+        const { data: approvalStatus, error } = await processApproval(
+            { approvalId: selectedUser._id, comments: comment, status: "Approved" }
         )
-        if(error){
-            console.log("Error",error);
+        if (error) {
+            console.log("Error", error);
         }
-        console.log("Approval Status",approvalStatus);
-        
+        console.log("Approval Status", approvalStatus);
+
     };
 
     const handleReject = () => {
@@ -201,19 +197,17 @@ function UserApprovalGrid({ data }) {
                                 <div className="bg-white rounded-lg shadow-md">
                                     <div className="p-6">
                                         <div className="ag-theme-alpine w-full h-[600px]">
-                                            <AgGridReact
-                                                rowData={approvalData}
-                                                columnDefs={columnDefs}
+                                            <GridManager
+                                                columns={columnDefs}
+                                                data={approvalData}
+                                                enableEditing={true}
                                                 pagination={true}
-                                                paginationPageSize={10}
-                                                domLayout='autoHeight'
-                                                rowHeight={60}
-                                                headerHeight={48}
-                                                defaultColDef={{
-                                                    resizable: true,
-                                                    sortable: true,
-                                                    filter: true
-                                                }}
+                                                paginationPageSize={5}
+                                                enableSorting={true}
+                                                enableFiltering={true}
+                                                rowSelection="single"
+                                                // onRowUpdate={handleRowUpdate}
+                                                // onRowSelect={handleRowSelect}
                                             />
                                             {/* <DataGridComp rows={mockData} columns={columnDefs}/> */}
                                         </div>
@@ -453,7 +447,7 @@ function UserApprovalGrid({ data }) {
                                     </p>
                                 </div>
                             </div> */}
-                            <CloudinaryPdfViewer publicId={selectedDocument.publicId}/>
+                            <CloudinaryPdfViewer publicId={selectedDocument.publicId} />
                         </div>
                     </div>
                 </div>

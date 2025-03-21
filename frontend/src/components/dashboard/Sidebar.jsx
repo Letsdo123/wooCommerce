@@ -89,7 +89,7 @@ const MenuItem = ({ item, isCollapsed, toggleSidebar, level = 0 }) => {
 function Sidebar() {
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [isMobileOpen, setIsMobileOpen] = useState(false);
-    const userRole = ["SUPER ADMIN","SELLER"];
+    const userRole = ["SUPER ADMIN"];
     const { data: menuItems, error, isLoading } = useFetchMenuItemQuery(userRole, {
         skip: !userRole,
     });

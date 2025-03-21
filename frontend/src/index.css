@@ -11,11 +11,11 @@ body {
   min-width: 320px;
   min-height: 100vh;
 }
-@layer utilities {
+/* @layer utilities {
     .focus-ring-primary-20 {
       @apply focus:ring-2 focus:ring-red-200;
     }
-  }
+  } */
   
 .hero-gradient {
   background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070&auto=format&fit=crop');
@@ -100,4 +100,145 @@ body {
 
 .ag-theme-alpine .ag-row-hover {
   background-color: rgb(243, 244, 246);
+}
+
+@layer base {
+  input[type="text"],
+  input[type="email"],
+  input[type="url"],
+  input[type="password"],
+  input[type="number"],
+  input[type="date"],
+  input[type="datetime-local"],
+  input[type="month"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="time"],
+  input[type="week"],
+  select,
+  textarea {
+    @apply w-full rounded-lg border-2 border-gray-200 px-4 py-2.5 text-gray-700 transition-all duration-200 ease-in-out;
+    @apply focus:border-green-500 focus:ring-2 focus:ring-green-200 focus:outline-none;
+    @apply placeholder:text-gray-400;
+    @apply hover:border-green-300;
+    @apply disabled:bg-gray-50 disabled:text-gray-500 disabled:border-gray-200;
+  }
+
+  select {
+    @apply appearance-none bg-white;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236B7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+  }
+
+  select:focus {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2322C55E' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  }
+  
+  textarea {
+    @apply resize-y min-h-[100px];
+  }
+  
+  input[type="checkbox"] {
+    @apply h-5 w-5 rounded border-2 border-gray-300 text-green-600;
+    @apply focus:ring-2 focus:ring-green-200 focus:ring-offset-0;
+    @apply hover:border-green-400 transition-colors duration-200;
+  }
+  
+  button {
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500;
+    @apply transition-all duration-200 ease-in-out;
+  }
+
+  label {
+    @apply block text-sm font-medium text-gray-700 mb-1;
+  }
+}
+
+.form-group {
+  @apply space-y-1;
+}
+
+.input-group {
+  @apply relative;
+}
+
+.input-group input:focus + .input-icon,
+.input-group select:focus + .input-icon {
+  @apply text-green-500;
+}
+
+.aspect-w-16 {
+  position: relative;
+  padding-bottom: 56.25%;
+}
+
+.aspect-w-16 > * {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+/* Custom Dropzone Styling */
+.dropzone {
+  @apply transition-all duration-200 ease-in-out;
+  @apply border-2 border-dashed rounded-lg p-6;
+  @apply flex flex-col items-center justify-center;
+  @apply bg-gray-50 hover:bg-gray-50/80;
+}
+
+.dropzone.active {
+  @apply border-green-500 bg-green-50;
+}
+
+/* Tag Input Styling */
+.tag-input {
+  @apply flex flex-wrap gap-2 p-2 border-2 border-gray-200 rounded-lg;
+  @apply focus-within:border-green-500 focus-within:ring-2 focus-within:ring-green-200;
+  @apply transition-all duration-200;
+}
+
+.tag {
+  @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+  @apply bg-green-100 text-green-800;
+  @apply transition-all duration-200;
+}
+
+.tag-remove {
+  @apply ml-2 text-green-600 hover:text-green-800;
+  @apply transition-colors duration-200;
+}
+
+/* Form Section Styling */
+.form-section {
+  @apply bg-white rounded-lg shadow-sm p-6;
+  @apply border border-gray-100;
+}
+
+.form-section-header {
+  @apply flex items-center space-x-2 mb-4;
+  @apply text-lg font-medium text-gray-900;
+}
+
+/* Preview Card Styling */
+.preview-card {
+  @apply bg-white rounded-lg shadow-lg p-6;
+  @apply border border-gray-100;
+  @apply transition-all duration-300;
+}
+
+.preview-image {
+  @apply rounded-lg overflow-hidden;
+  @apply bg-gray-100;
+  @apply aspect-w-16;
+}
+
+.preview-content {
+  @apply space-y-4 mt-4;
 }

@@ -121,7 +121,7 @@ const menuItems = [
     {
         name: 'Settings',
         icon: "Cog6ToothIcon",
-        roles: ["SUPER ADMIN"],
+        roles: ["SUPER ADMIN","LOGISTICS"],
         submenu: [
             { name: 'General', path: '/settings' },
             { name: 'Security', path: '/settings/security' },

@@ -302,15 +302,15 @@ export const getAllRoles = asyncHandler(async (req, res) => {
 export const getUserDetails = asyncHandler(async (req, res) => {
     async function cleanData(rawData) {
         const result = {};
-    
+
         for (const item of rawData) {
             const { entity_type, entity_id, related_type } = item;
-    
+
             // Fetch basic user details asynchronously
             const basicUserDetails = await Seller.findOne({
                 where: { id: entity_id }, // Assuming entity_id corresponds to user_id
             });
-    
+
             // Initialize the entity type and ID if not already present
             if (!result[entity_type]) {
                 result[entity_type] = {
@@ -322,7 +322,7 @@ export const getUserDetails = asyncHandler(async (req, res) => {
                     bank_details: []
                 };
             }
-    
+
             // Add related data to the appropriate array
             if (related_type === "ADDRESS" && item.addresses) {
                 result[entity_type].address.push(item.addresses.dataValues); // Extract dataValues
@@ -332,7 +332,7 @@ export const getUserDetails = asyncHandler(async (req, res) => {
                 result[entity_type].bank_details.push(item.banks.dataValues); // Extract dataValues
             }
         }
-    
+
         return result;
     }
     try {
@@ -366,10 +366,16 @@ export const getUserDetails = asyncHandler(async (req, res) => {
         // const basicUserDetails = await Seller.findOne({
         //     where: { user_id: userId },
         // })
+
+        // Ensure entity_id and entity_type are matched as pairs
+        const entityPairs = [...entityIdSet].map((id, index) => ({
+            entity_id: id,
+            entity_type: [...entityTypeSet][index],
+        }));
+
         const userDetails = await EntityRelation.findAll({
             where: {
-                entity_id: [...entityIdSet],
-                entity_type: [...entityTypeSet],
+                [Op.or]: entityPairs, // Match entity_id and entity_type as pairs
             },
             include: [
                 {

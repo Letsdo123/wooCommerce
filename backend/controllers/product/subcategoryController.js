@@ -1,6 +1,6 @@
 import asyncHandler from 'express-async-handler'
-import { ResponseHandler } from "../../services/responseHandler";
-import ProductSubCategory from '../../models/product/product_subcategory.model';
+import { ResponseHandler } from "../../services/responseHandler.js";
+import ProductSubCategory from '../../models/product/product_subcategory.model.js';
 
 export const createSubcategory = asyncHandler(async (req, res) => {
     const { name, description, image, isActive, category } = req.body;
@@ -8,7 +8,7 @@ export const createSubcategory = asyncHandler(async (req, res) => {
         name,
         description,
         image,
-        isActive,
+        isActive : isActive == 'active' ? true : false,
         category,
     });
     if (!subcategory) {

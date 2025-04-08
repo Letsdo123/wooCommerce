@@ -3,6 +3,8 @@ import DataGrid from '../../components/dashboard/DataGrid';
 import ProductSubCategoryForm from '../../components/dashboard/ProductSubCategoryForm';
 import { ShieldCheckIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import { useGetCategoryDetailsQuery } from '../../features/product/categoryApi.js';
+import { useSelector } from 'react-redux';
+import { useGetSubCategoryDetailsQuery } from '../../features/product/subcategoryApi.js';
 
 const mockRoles = [
     {
@@ -53,7 +55,7 @@ const ProductSubCategory = () => {
     const [roles, setRoles] = useState(mockRoles);
     const [permissions, setPermissions] = useState(mockPermissions);
     const [activeTab, setActiveTab] = useState('subcategories');
-    const { data, error, isLoading, isSuccess } = useGetCategoryDetailsQuery();
+    const { data, error, isLoading, isSuccess } = useGetSubCategoryDetailsQuery();
 
     useEffect(() => {
         console.log(data);

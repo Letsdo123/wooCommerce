@@ -1,9 +1,11 @@
 import { useForm, Controller } from "react-hook-form";
-import { useCreateCategoryMutation } from "../../features/product/categoryApi";
+import { useSelector } from "react-redux";
+import { useCreateSubCategoryMutation } from "../../features/product/subcategoryApi";
 
 const ProductSubCategoryForm = ({ type = "subcategory", onSubmit }) => {
-  const [createCategory, { isLoading, error }] = useCreateCategoryMutation();
-  
+  const [createSubCategory, { isLoading, error }] = useCreateSubCategoryMutation();
+  const { categories } = useSelector((state) => state.productCategory);
+
   const {
     register,
     handleSubmit,
@@ -28,7 +30,7 @@ const ProductSubCategoryForm = ({ type = "subcategory", onSubmit }) => {
 
   const onSubmitHandler = async (data) => {
     try {
-      await createCategory(data).unwrap();
+      await createSubCategory(data).unwrap();
       reset(); // Reset form after successful submission
       onSubmit?.(data); // Pass data to parent if needed
     } catch (err) {
@@ -79,6 +81,26 @@ const ProductSubCategoryForm = ({ type = "subcategory", onSubmit }) => {
             <p className="text-red-500 text-sm">{errors.description.message}</p>
           )}
         </div>
+        {/* category field */}
+        <div>
+          <label className="form-label">Category *</label>
+          <select
+            className="form-input"
+            {...register("category", {
+              required: "category is required",
+            })}
+          >
+            <option value="">Select Category</option>
+            {categories?.map((category) => (
+              <option key={category._id} value={category._id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+          {errors.category && (
+            <p className="text-red-500 text-sm">{errors.category.message}</p>
+          )}
+        </div>
 
         {/* Status Field */}
         <div>
@@ -95,23 +117,6 @@ const ProductSubCategoryForm = ({ type = "subcategory", onSubmit }) => {
           </select>
           {errors.isActive && (
             <p className="text-red-500 text-sm">{errors.isActive.message}</p>
-          )}
-        </div>
-
-        <div>
-          <label className="form-label">Category *</label>
-          <select
-            className="form-input"
-            {...register("category", {
-              required: "category is required",
-            })}
-          >
-            <option value="">Select Category</option>
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-          </select>
-          {errors.category && (
-            <p className="text-red-500 text-sm">{errors.category.message}</p>
           )}
         </div>
 

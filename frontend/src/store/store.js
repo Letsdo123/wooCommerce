@@ -8,6 +8,7 @@ import storage from 'redux-persist/lib/storage'
 import { menuApi } from '../features/menu/menuApi'
 import { approvalApi } from '../features/approval/approvalApi'
 import { categoryApi } from '../features/product/categoryApi'
+import { productApi } from '../features/product/productApi'
 
 // configure the presists
 // using local storage for 
@@ -30,7 +31,7 @@ const rootReducer = combineReducers({
 // This is the configuration of the store
 export const store = configureStore({
     reducer: rootReducer,
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }).concat(authApi.middleware).concat(menuApi.middleware).concat(approvalApi.middleware).concat(categoryApi.middleware)
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }).concat(authApi.middleware).concat(menuApi.middleware).concat(approvalApi.middleware).concat(categoryApi.middleware).concat(productApi.middleware),
 })
 
 export const persistor = persistStore(store)

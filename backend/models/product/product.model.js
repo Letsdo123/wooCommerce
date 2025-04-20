@@ -18,65 +18,64 @@ const ProductSchema = new mongoose.Schema(
     },
     sku: {
       type: String,
-      unique: true,
+      // unique: true,
     },
     images: [
       {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "images",
       },
     ],
     thumbnail: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "images",
     },
     tags: [
       {
         type: String,
       },
     ],
-    slug: {
-      type: String,
-      unique: true,
-    },
 
     // reference sub-models
+    // category: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "ProductCategory",
+    //   required: true,
+    // },
 
-    category: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "ProductCategory",
-      required: true,
-    },
     subCategory: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "ProductSubCategory",
-      required: true,
+      // required: true,
     },
     pricing: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "ProductPricing",
-      required: true,
+      // required: true,
     },
     inventory: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "ProductInventory",
-      required: true,
+      // required: true,
     },
     attributes: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "ProductAttributes",
-      required: true,
+      // required: true,
     },
     seller: {
       type: mongoose.Schema.Types.Mixed,
-      required: true,
+      // required: true,
     },
     logistics: {
       type: mongoose.Schema.Types.Mixed,
-      required: true,
+      // required: true,
+      default: null,
     },
     seo: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "ProductSEO",
-      required: true,
+      // required: true,
     },
     isActive: {
       type: Boolean,

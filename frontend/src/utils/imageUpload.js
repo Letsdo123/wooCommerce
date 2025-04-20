@@ -15,7 +15,7 @@ const uploadImageUrl = asyncHandler(async (file, context, signedUrlData) => {
     }
 
     const { signature, folder, timestamp, cloudName, apiKey } = signedUrlData.data;
-    const resourceType = getResourceType(file); // Dynamically determine resource type
+    const resourceType = "image"; // Dynamically determine resource type
 
     // Prepare the form data
     const formData = new FormData();

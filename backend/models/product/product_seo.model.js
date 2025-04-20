@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 
 const ProductSEOSchema = new mongoose.Schema({
     product: {
@@ -13,7 +14,7 @@ const ProductSEOSchema = new mongoose.Schema({
     slug: {
         type: String,
         required: true,
-        unique: true,
+        // unique: true,
     }
 })
 

@@ -36,7 +36,7 @@ export const addProducts = asyncHandler(async (req, res) => {
     const product = { ...basic, pricing: null, attributes: null, seo: null, inventory: null };
     const uploadedProducts = await Product.create(product);
     console.log("Uploaded product", uploadedProducts);
-    
+
 
     if (!uploadedProducts) {
         return ResponseHandler.error(res, null, "Products Not Created", 400);
@@ -111,3 +111,13 @@ export const handleImageUpload = async (entityType, entityId, imageType, publicI
         throw new Error("Image upload failed");
     }
 };
+
+// controller to get all products
+// after filter based on category
+export const getAllProducts = asyncHandler(async (req, res) => {
+    const popularProducts = await Product.find({views:{$sort:-1}}).limit(10).populate("pricing").populate("attributes").populate("inventory").populate("seo").populate("images").populate("thumbnail").sort({ createdAt: -1 });
+    if (!popularProducts) {
+        return ResponseHandler.error(res, null, "Products Not Found", 400);
+    }
+    return ResponseHandler.success(res, popularProducts, "Products Found ", 200);
+});

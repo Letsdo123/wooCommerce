@@ -36,6 +36,30 @@ const ProductSchema = new mongoose.Schema(
       },
     ],
 
+
+    // some extra field to categorise the products
+    
+    // for top rated products
+    rating:{
+      type: Number,
+      default: 0,
+    },
+    // for top selling products
+    sales:{
+      type: Number,
+      default: 0,
+    },
+    // for top viewed products
+    views:{
+      type: Number,
+      default: 0,
+    },
+    // for top discount products
+    discount:{
+      type: Number,
+      default: 0,
+    },
+
     // reference sub-models
     // category: {
     //   type: mongoose.Schema.Types.ObjectId,

@@ -115,9 +115,125 @@ export const handleImageUpload = async (entityType, entityId, imageType, publicI
 // controller to get all products
 // after filter based on category
 export const getAllProducts = asyncHandler(async (req, res) => {
-    const popularProducts = await Product.find({views:{$sort:-1}}).limit(10).populate("pricing").populate("attributes").populate("inventory").populate("seo").populate("images").populate("thumbnail").sort({ createdAt: -1 });
+    /* const popularProducts = await Product.find()
+        .sort({ views: -1 })
+        .limit(10)
+        .populate("pricing") 
+        .populate("attributes") 
+        .populate("inventory") 
+        .populate("seo") 
+        .populate("images") */
+
+    const popularProducts = await Product.aggregate(
+        [
+            {
+                $lookup: {
+                    from: "productsubcategories",
+                    localField: "subCategory",
+                    foreignField: "_id",
+                    as: "subCategoryDetails",
+                },
+            },
+            {
+                $unwind: "$subCategoryDetails"
+            },
+            {
+                $lookup: {
+                    from: "productcategories",
+                    localField: "subCategoryDetails.category",
+                    foreignField: "_id",
+                    as: "categoryDetails"
+                }
+            },
+            {
+                $unwind: "$categoryDetails"
+            },
+            {
+                $lookup: {
+                    from: "productpricings",
+                    localField: "pricing",
+                    foreignField: "_id",
+                    as: "pricingDetails"
+                }
+            },
+            {
+                $unwind: "$pricingDetails"
+            },
+            {
+                $lookup: {
+                    from: "productattributes",
+                    localField: "attributes",
+                    foreignField: "_id",
+                    as: "attributesDetails"
+                }
+            },
+            {
+                $unwind: "$pricingDetails"
+            },
+            {
+                $lookup: {
+                    from: "productattributes",
+                    localField: "attributes",
+                    foreignField: "_id",
+                    as: "attributesDetails",
+                },
+            },
+            {
+                $unwind: "$attributesDetails"
+            },
+            {
+                $lookup: {
+                    from: "productseos",
+                    localField: "seo",
+                    foreignField: "_id",
+                    as: "seoDetails",
+                },
+            },
+            {
+                $unwind: "$seoDetails"
+            },
+            {
+                $sort: {
+                    "views": -1
+                }
+            },
+            {
+                $limit: 10
+            },
+            {
+                $group: {
+                    _id: {
+                        category: "$categoryDetails.name",
+                        subcategory: "$subCategoryDetails.name",
+                    },
+                    products: {
+                        $push: {
+                            _id: "$_id",
+                            name: "$name",
+                            views: "$views",
+                            pricing: "$pricingDetails",
+                            attributes: "$attributesDetails",
+                            inventory: "$inventoryDetails",
+                            seo: "$seoDetails",
+                            images: "$images",
+                        }
+                    }
+                }
+            },
+            {
+                $project: {
+                    _id: -1,
+                    category: "$_id.category",
+                    subCategory: "$_id.subcategory",
+                    products: 1,
+                }
+            }
+        ]
+    )
+
     if (!popularProducts) {
         return ResponseHandler.error(res, null, "Products Not Found", 400);
     }
-    return ResponseHandler.success(res, popularProducts, "Products Found ", 200);
+    console.log("Popular products", popularProducts);
+    return ResponseHandler.success(res, popularProducts, "Products Found", 200);
 });

@@ -26,6 +26,7 @@ const rootReducer = combineReducers({
     [approvalApi.reducerPath]: approvalApi.reducer,
     productCategory: persistReducer(persistConfig, categoryReducer),
     [categoryApi.reducerPath]: categoryApi.reducer,
+    [productApi.reducerPath]: productApi.reducer,
 })
 
 // This is the configuration of the store

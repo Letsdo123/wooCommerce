@@ -23,12 +23,12 @@ const ProductSchema = new mongoose.Schema(
     images: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "images",
+        ref: "Image",
       },
     ],
     thumbnail: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "images",
+      ref: "Image",
     },
     tags: [
       {

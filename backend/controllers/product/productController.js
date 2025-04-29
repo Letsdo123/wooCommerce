@@ -124,6 +124,8 @@ export const getAllProducts = asyncHandler(async (req, res) => {
         .populate("seo") 
         .populate("images") */
 
+
+
     const popularProducts = await Product.aggregate(
         [
             {
@@ -135,40 +137,29 @@ export const getAllProducts = asyncHandler(async (req, res) => {
                 },
             },
             {
-                $unwind: "$subCategoryDetails"
+                $unwind: "$subCategoryDetails",
             },
             {
                 $lookup: {
                     from: "productcategories",
                     localField: "subCategoryDetails.category",
                     foreignField: "_id",
-                    as: "categoryDetails"
-                }
+                    as: "categoryDetails",
+                },
             },
             {
-                $unwind: "$categoryDetails"
+                $unwind: "$categoryDetails",
             },
             {
                 $lookup: {
                     from: "productpricings",
                     localField: "pricing",
                     foreignField: "_id",
-                    as: "pricingDetails"
-                }
+                    as: "pricingDetails",
+                },
             },
             {
-                $unwind: "$pricingDetails"
-            },
-            {
-                $lookup: {
-                    from: "productattributes",
-                    localField: "attributes",
-                    foreignField: "_id",
-                    as: "attributesDetails"
-                }
-            },
-            {
-                $unwind: "$pricingDetails"
+                $unwind: "$pricingDetails",
             },
             {
                 $lookup: {
@@ -179,7 +170,7 @@ export const getAllProducts = asyncHandler(async (req, res) => {
                 },
             },
             {
-                $unwind: "$attributesDetails"
+                $unwind: "$attributesDetails",
             },
             {
                 $lookup: {
@@ -190,44 +181,94 @@ export const getAllProducts = asyncHandler(async (req, res) => {
                 },
             },
             {
-                $unwind: "$seoDetails"
-            },
-            {
-                $sort: {
-                    "views": -1
-                }
-            },
-            {
-                $limit: 10
-            },
-            {
-                $group: {
-                    _id: {
-                        category: "$categoryDetails.name",
-                        subcategory: "$subCategoryDetails.name",
-                    },
-                    products: {
-                        $push: {
-                            _id: "$_id",
-                            name: "$name",
-                            views: "$views",
-                            pricing: "$pricingDetails",
-                            attributes: "$attributesDetails",
-                            inventory: "$inventoryDetails",
-                            seo: "$seoDetails",
-                            images: "$images",
-                        }
-                    }
-                }
+                $unwind: "$seoDetails",
             },
             {
                 $project: {
-                    _id: -1,
-                    category: "$_id.category",
-                    subCategory: "$_id.subcategory",
-                    products: 1,
-                }
-            }
+                    _id: 1,
+                    name: 1,
+                    views: 1,
+                    sales: 1,
+                    pricingDetails: 1,
+                    attributesDetails: 1,
+                    inventoryDetails: 1,
+                    seoDetails: 1,
+                    images: 1,
+                    categoryDetails: { name: 1 },
+                    subCategoryDetails: { name: 1 },
+                },
+            },
+            {
+                $facet: {
+                    popularProducts: [
+                        {
+                            $sort: {
+                                views: -1,
+                            },
+                        },
+                        {
+                            $limit: 10,
+                        },
+                    ],
+                    mostSellingProducts: [
+                        {
+                            $sort: {
+                                sales: -1,
+                            },
+                        },
+                        {
+                            $limit: 10,
+                        },
+                    ],
+                    mostPopularCategory: [
+                        {
+                            $group: {
+                                _id: {
+                                    category: "$categoryDetails.name",
+                                    subcategory: "$subCategoryDetails.name",
+                                },
+                                totalViews: { $sum: "$views" }, // Calculate total views for each subcategory
+                                products: {
+                                    $push: {
+                                        _id: "$_id",
+                                        name: "$name",
+                                        views: "$views",
+                                        pricing: "$pricingDetails",
+                                        attributes: "$attributesDetails",
+                                        inventory: "$inventoryDetails",
+                                        seo: "$seoDetails",
+                                        images: "$images",
+                                    },
+                                },
+                            },
+                        },
+                        {
+                            $group: {
+                                _id: "$_id.category",
+                                totalSubcategoryView: { $sum: "$totalViews" },
+                                subCategories: {
+                                    $push: {
+                                        subcategory: "$_id.subcategory",
+                                        totalViews: "$totalViews", // Include total views for each subcategory
+                                        products: "$products",
+                                    },
+                                },
+                            },
+                        },
+                        {
+                            $project: {
+                                _id: 0,
+                                category: "$_id",
+                                totalSubcategoryView: 1,
+                                subCategories: 1,
+                            },
+                        },
+                        {
+                            $sort: { totalSubcategoryView: -1 }
+                        }
+                    ],
+                },
+            },
         ]
     )
 

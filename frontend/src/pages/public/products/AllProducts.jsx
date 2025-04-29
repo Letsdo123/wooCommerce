@@ -4,15 +4,32 @@ import ProductCard from './ProductCard';
 import { useGetProductQuery } from '../../../features/product/productApi';
 
 function AllProducts() {
+  const [activeCategory, setActiveCategory] = useState("All")
   const { data: filterData = [], isLoading, isError, isSuccess } = useGetProductQuery();
   useEffect(() => {
     if (isSuccess) {
       console.log("API Response:", filterData);
+      const initialCategory = Object.keys(filterData.data[0]).reduce((acc, section) => {
+        acc[section] = "All"
+        return acc
+      }, {})
+      console.log("Initial Category:", initialCategory);
+      setActiveCategory(initialCategory)
     }
     if (isError) {
       console.error("Error fetching products");
     }
   }, [isSuccess, isError, filterData]);
+
+  // handle category chnage for a specific category
+  const handleCategoryChange = (section, category) => {
+    setActiveCategory(prevState => ({
+      ...prevState,
+      [section]: category
+    }));
+  }
+
+
   const products = [
     {
       id: 1,
@@ -131,39 +148,68 @@ function AllProducts() {
       brand: "Tyson"
     }
   ];
-  const [activeCategory, setActiveCategory] = useState("All")
-  const filteredProducts = activeCategory === "All"
-    ? products
-    : products.filter(product => {
-      if (activeCategory === "Milks & Dairies") return product.category === "Hodo Foods";
-      if (activeCategory === "Coffes & Teas") return product.category === "Coffes";
-      if (activeCategory === "Pet Foods") return product.category === "Pet Foods";
-      if (activeCategory === "Meats") return product.category === "Meats";
-      if (activeCategory === "Vegetables") return product.category === "Vegetables";
-      if (activeCategory === "Fruits") return product.category === "Fresh";
-      return false;
-    });
 
 
+  // Loading depend on the basis of the api response
   if (isLoading) return <p>Loading...</p>
   if (isError) return <p>Something went wrong</p>
   if (isSuccess) console.log(filterData)
   return (
     <div className="container mx-auto py-12 px-4">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-800">Popular Products</h2>
-      </div>
+      {Object.keys(filterData.data[0]).map((section) => {
+        const products = filterData.data[0][section]
+        const category = activeCategory[section] || "All"
 
-      <CategoryTabs
-        activeCategory={activeCategory}
-        onCategoryChange={setActiveCategory}
-      />
+        // Filter products based on the active category
+        const filteredProducts = category === "All" ? products : products.filter((product) => {
+          return product.categoryDetails?.name === category
+        });
+        return (
+          <div key={section} className="mb-12">
+            {/* Section Title */}
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-bold text-gray-800 capitalize">
+                {section.replace(/([A-Z])/g, " $1")} {/* Convert camelCase to Title Case */}
+              </h2>
+            </div>
+            {/* Category Tabs */}
+            <CategoryTabs
+              categories={[
+                "All",
+                ...new Set(products.map((p) => p.categoryDetails?.name || "Unknown")),
+              ]}
+              activeCategory={category}
+              onCategoryChange={(category) => handleCategoryChange(section, category)}
+            />
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+              {filteredProducts.map((product) => (
+                <ProductCard
+                  key={product._id}
+                  id={product._id}
+                  name={product.name}
+                  price={product.pricingDetails?.finalPrice || 0}
+                  originalPrice={product.pricingDetails?.mrp || 0}
+                  image={
+                    "https://via.placeholder.com/150" // Static placeholder image
+                  }
+                  category={product.categoryDetails?.name || "Unknown"}
+                  rating={Math.round(product.rating || 0)}
+                  reviewCount={product.sales || 0}
+                  brand={product.brand || "Unknown"}
+                  badge={
+                    product.discount > 20
+                      ? { text: "Hot", color: "hot" }
+                      : product.discount > 10
+                        ? { text: "Sale", color: "sale" }
+                        : null
+                  }
+                />
+              ))}
+            </div>
+          </div>
+        )
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-        {filteredProducts.map(product => (
-          <ProductCard key={product.id} {...product} />
-        ))}
-      </div>
+      })}
     </div>
   );
 }

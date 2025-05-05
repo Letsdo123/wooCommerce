@@ -5,6 +5,9 @@ import { store,persistor } from './store/store.js'
 import { RouterProvider } from 'react-router-dom'
 import router from './routes/index.jsx'
 import { PersistGate } from 'redux-persist/integration/react'
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
 
 createRoot(document.getElementById('root')).render(
   <Provider store={store}>

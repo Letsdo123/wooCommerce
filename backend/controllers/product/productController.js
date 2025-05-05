@@ -126,7 +126,7 @@ export const getAllProducts = asyncHandler(async (req, res) => {
 
 
 
-    const popularProducts = await Product.aggregate(
+    const result = await Product.aggregate(
         [
             {
                 $lookup: {
@@ -189,6 +189,8 @@ export const getAllProducts = asyncHandler(async (req, res) => {
                     name: 1,
                     views: 1,
                     sales: 1,
+                    rating: 1,
+                    discount: 1,
                     pricingDetails: 1,
                     attributesDetails: 1,
                     inventoryDetails: 1,
@@ -272,9 +274,24 @@ export const getAllProducts = asyncHandler(async (req, res) => {
         ]
     )
 
-    if (!popularProducts) {
+    // This takes desicion according to the result of the query
+    if (!result) {
         return ResponseHandler.error(res, null, "Products Not Found", 400);
     }
-    console.log("Popular products", popularProducts);
-    return ResponseHandler.success(res, popularProducts, "Products Found", 200);
+
+    // Here I am reprashing the result to make it more readable and easy to use
+    const reshaped = {
+        products: {
+            popularProducts: result[0].popularProducts,
+            mostSellingProducts: result[0].mostSellingProducts,
+        },
+        categories: {
+            mostPopularCategory: result[0].mostPopularCategory,
+        }
+    };
+
+
+
+    console.log("Popular products", reshaped);
+    return ResponseHandler.success(res, reshaped, "Products Found", 200);
 });

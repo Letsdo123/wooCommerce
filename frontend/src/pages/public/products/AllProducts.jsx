@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import CategoryTabs from './CategoryTabs';
 import ProductCard from './ProductCard';
 import { useGetProductQuery } from '../../../features/product/productApi';
+import CategoryGrid from '../categories/CategoryGrid';
 
 function AllProducts() {
   const [activeCategory, setActiveCategory] = useState("All")
@@ -9,7 +10,7 @@ function AllProducts() {
   useEffect(() => {
     if (isSuccess) {
       console.log("API Response:", filterData);
-      const initialCategory = Object.keys(filterData.data[0]).reduce((acc, section) => {
+      const initialCategory = Object.keys(filterData.data.products).reduce((acc, section) => {
         acc[section] = "All"
         return acc
       }, {})
@@ -156,8 +157,8 @@ function AllProducts() {
   if (isSuccess) console.log(filterData)
   return (
     <div className="container mx-auto py-12 px-4">
-      {Object.keys(filterData.data[0]).map((section) => {
-        const products = filterData.data[0][section]
+      {Object.keys(filterData.data.products).map((section) => {
+        const products = filterData.data.products[section]
         const category = activeCategory[section] || "All"
 
         // Filter products based on the active category
@@ -210,6 +211,7 @@ function AllProducts() {
         )
 
       })}
+      <CategoryGrid/>
     </div>
   );
 }
